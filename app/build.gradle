@@ -8,12 +8,16 @@ android {
 
     defaultConfig {
         applicationId "com.john_xenakis.jokester"
-        minSdk 16
+        minSdk 21
         targetSdk 32
         versionCode 1
         versionName "1.0.0-alpha"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        compose true
     }
 
     buildTypes {
@@ -29,14 +33,39 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.1.1'
+    }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.compose.ui:ui:1.1.1'
+    implementation 'androidx.compose.ui:ui-graphics:1.1.1'
+    // Navigation Compose
+    implementation 'androidx.navigation:navigation-compose:2.4.2'
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.4.0'
+    // Compose Material Design 3
+    implementation 'androidx.compose.material3:material3:1.0.0-alpha13'
+    // Animations
+    implementation 'androidx.compose.animation:animation:1.1.1'
+    // Tooling support (Previews, etc.)
+    implementation 'androidx.compose.ui:ui-tooling:1.1.1'
+    // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
+    // Accompanist for accessing status bar and system ui
+    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.24.11-rc'
+    // Splash screen API
+    implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    debugImplementation 'androidx.compose.ui:ui-test-manifest:1.1.1'
 }
