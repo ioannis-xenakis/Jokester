@@ -10,6 +10,8 @@ import androidx.compose.ui.platform.LocalContext
  * The color palette for when the app is in dark theme mode.
  */
 private val DarkColorPalette = darkColorScheme(
+    primary = Gray80,
+    onPrimary = Gray00,
     background = Gray27,
     onBackground = Gray100
 )
@@ -18,6 +20,8 @@ private val DarkColorPalette = darkColorScheme(
  * The color palette for when the app is in light theme mode.
  */
 private val LightColorPalette = lightColorScheme(
+    primary = Blue65,
+    onPrimary = Gray100,
     background = Gray100,
     onBackground = Gray00
 )
@@ -41,6 +45,7 @@ fun JokesterTheme(
     MaterialTheme(
         colorScheme = colors,
         content = content,
-        typography = FredokaOneTypography
+        typography = FredokaOneTypography,
+        shapes = Shapes
     )
 }
