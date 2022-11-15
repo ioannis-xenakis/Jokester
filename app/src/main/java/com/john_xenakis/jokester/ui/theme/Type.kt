@@ -19,8 +19,13 @@ private val FredokaOne = FontFamily(
  * For ex. Fredoka One font for different font sizes.
  */
 val FredokaOneTypography = Typography(
-     headlineLarge = TextStyle(
+    headlineLarge = TextStyle(
         fontFamily = FredokaOne,
         fontSize = 36.sp
+    ),
+
+    headlineSmall = TextStyle(
+        fontFamily = FredokaOne,
+        fontSize = 22.sp
     )
 )

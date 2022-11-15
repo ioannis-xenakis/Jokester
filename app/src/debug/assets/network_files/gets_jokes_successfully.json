@@ -1,0 +1,172 @@
+{
+  "error": false,
+  "amount": 10,
+  "jokes": [
+    {
+      "category": "Programming",
+      "type": "single",
+      "joke": "Programming is 10% science, 20% ingenuity, and 70% getting the ingenuity to work with the science.",
+      "flags": {
+        "nsfw": false,
+        "religious": false,
+        "political": false,
+        "racist": false,
+        "sexist": false,
+        "explicit": false
+      },
+      "id": 37,
+      "safe": true,
+      "lang": "en"
+    },
+    {
+      "category": "Misc",
+      "type": "twopart",
+      "setup": "My wife left me because I'm too insecure and paranoid.",
+      "delivery": "Oh wait, never mind. She was just getting the mail.",
+      "flags": {
+        "nsfw": false,
+        "religious": false,
+        "political": false,
+        "racist": false,
+        "sexist": false,
+        "explicit": false
+      },
+      "id": 81,
+      "safe": true,
+      "lang": "en"
+    },
+    {
+      "category": "Pun",
+      "type": "single",
+      "joke": "I was reading a great book about an immortal dog the other day. It was impossible to put down.",
+      "flags": {
+        "nsfw": false,
+        "religious": false,
+        "political": false,
+        "racist": false,
+        "sexist": false,
+        "explicit": false
+      },
+      "id": 236,
+      "safe": true,
+      "lang": "en"
+    },
+    {
+      "category": "Pun",
+      "type": "twopart",
+      "setup": "What do you call a cop's penis after he's done masturbating?",
+      "delivery": "Pulled pork.",
+      "flags": {
+        "nsfw": true,
+        "religious": false,
+        "political": false,
+        "racist": false,
+        "sexist": false,
+        "explicit": true
+      },
+      "id": 64,
+      "safe": false,
+      "lang": "en"
+    },
+    {
+      "category": "Pun",
+      "type": "twopart",
+      "setup": "Where do sick cruise ships go to get healthy?",
+      "delivery": "The dock!",
+      "flags": {
+        "nsfw": false,
+        "religious": false,
+        "political": true,
+        "racist": false,
+        "sexist": false,
+        "explicit": false
+      },
+      "id": 212,
+      "safe": true,
+      "lang": "en"
+    },
+    {
+      "category": "Dark",
+      "type": "single",
+      "joke": "Dark humor is like food, not everyone gets it.",
+      "flags": {
+        "nsfw": false,
+        "religious": false,
+        "political": false,
+        "racist": true,
+        "sexist": false,
+        "explicit": true
+      },
+      "id": 162,
+      "safe": false,
+      "lang": "en"
+    },
+    {
+      "category": "Christmas",
+      "type": "twopart",
+      "setup": "What says Oh Oh Oh?",
+      "delivery": "Santa walking backwards!",
+      "flags": {
+        "nsfw": false,
+        "religious": false,
+        "political": false,
+        "racist": false,
+        "sexist": false,
+        "explicit": false
+      },
+      "id": 245,
+      "safe": true,
+      "lang": "en"
+    },
+    {
+      "category": "Dark",
+      "type": "twopart",
+      "setup": "Everyone says that Hitler really loved animals.",
+      "delivery": "Then why did he kill 6 million of them?",
+      "flags": {
+        "nsfw": false,
+        "religious": false,
+        "political": false,
+        "racist": true,
+        "sexist": false,
+        "explicit": true
+      },
+      "id": 106,
+      "safe": false,
+      "lang": "en"
+    },
+    {
+      "category": "Dark",
+      "type": "single",
+      "joke": "My girlfriend's dog died, so I tried to cheer her up by getting her an identical one. It just made her more upset. She screamed at me, \"What am I supposed to do with two dead dogs?\"",
+      "flags": {
+        "nsfw": false,
+        "religious": false,
+        "political": false,
+        "racist": false,
+        "sexist": false,
+        "explicit": false
+      },
+      "safe": false,
+      "id": 275,
+      "lang": "en"
+    },
+    {
+      "category": "Pun",
+      "type": "twopart",
+      "setup": "No matter how kind you are...",
+      "delivery": "German kids are always Kinder.",
+      "flags": {
+        "nsfw": false,
+        "religious": false,
+        "political": false,
+        "racist": false,
+        "sexist": false,
+        "explicit": false
+      },
+      "safe": true,
+      "id": 278,
+      "lang": "en"
+    }
+  ]
+}

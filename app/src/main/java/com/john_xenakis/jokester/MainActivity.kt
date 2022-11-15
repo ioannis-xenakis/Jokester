@@ -1,6 +1,5 @@
 package com.john_xenakis.jokester
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,11 +10,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.john_xenakis.jokester.navigation.SetupNavGraph
 import com.john_xenakis.jokester.ui.theme.JokesterTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * The Main Activity which contains the screens(composables).
@@ -24,6 +23,7 @@ import com.john_xenakis.jokester.ui.theme.JokesterTheme
  * @author Ioannis Xenakis
  * @version 1.0.0-alpha
  */
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     /**
      * The ViewModel for the MainActivity
@@ -36,13 +36,6 @@ class MainActivity : ComponentActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            installSplashScreen().apply {
-                this.setKeepOnScreenCondition{
-                    viewModel.isLoading.value
-                }
-            }
-        }
         setContent {
             JokesterTheme {
                 Surface(

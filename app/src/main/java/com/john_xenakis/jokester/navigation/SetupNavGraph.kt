@@ -1,14 +1,12 @@
 package com.john_xenakis.jokester.navigation
 
 import android.os.Build
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.john_xenakis.jokester.AnimatedSplashScreen
+import com.john_xenakis.jokester.animatedsplash.AnimatedSplashScreen
+import com.john_xenakis.jokester.home.HomeScreen
 
 /**
  * This is where all screens are as composables,
@@ -25,7 +23,7 @@ fun SetupNavGraph(navController: NavHostController) {
             }
         }
         composable(route = Screen.Home.route) {
-            Box(modifier = Modifier.fillMaxSize())
+            HomeScreen()
         }
     }
 }
