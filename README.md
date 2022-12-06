@@ -9,7 +9,7 @@ Built with Android Studio. Use The Stable version to build with me.
 
 ## Contribute
 I would appreciate it a lot to help me build this app and make it better for the people to see and use it.
-If you want, you can just drop some ideas for the app. You can drop your ideas as an "issue" on ["Issues" tab](https://github.com/ioannis-xenakis/Jokester/issues), then click on   Thank you for seeing this!
+If you want, you can just drop some ideas for the app. You can drop your ideas as an "issue" on ["Issues" tab](https://github.com/ioannis-xenakis/Jokester/issues), then click on "New issue" and add your idea there. Thank you for seeing this!
 
 ## Contact me
 For anything you want, to contact me, don't hesitate to contact me by email, at: Xenakis.i.contact@gmail.com
