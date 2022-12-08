@@ -5,11 +5,13 @@ The app that can make us laugh with its jokes! The android app that shows both d
 **WARNING**: Some of the jokes that the app shows, may be offensive for some people. No offense intended. Don't say I didn't warn you. The jokes are there to make us laugh, not offend people. When the 1.0.0-beta releases, it will have an option to show only non-offensive and appropriate jokes for everyone.
 
 ## Tools/ide used for app development
-Built with Android Studio. Use The Stable version to build with me.
+Built with Android Studio. Use the Stable version to build with me.
 
 ## Contribute
 I would appreciate it a lot to help me build this app and make it better for the people to see and use it.
-If you want, you can just drop some ideas for the app. You can drop your ideas as an "issue" on ["Issues" tab](https://github.com/ioannis-xenakis/Jokester/issues), then click on "New issue" and add your idea there. Thank you for seeing this!
+- If you want, you can just drop some ideas for the app. You can drop your ideas as an "issue" on ["issues" tab](https://github.com/ioannis-xenakis/Jokester/issues), then click on "New issue" and add your idea there.
+- Also, if you want to code with me and help, you can create an issue in [issues tab](https://github.com/ioannis-xenakis/Jokester/issues) to tell me what kind of feature/help you want to suggest, then you can fork the project, clone your forked project to your android studio, create a branch from Develop branch, make your changes on the created branch and pull request on my Develop branch. There's a Github official tutorial about [pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) from your fork to upstream repository(my repository).
+Thank you for seeing this!
 
 ## Contact me
 For anything you want, to contact me, don't hesitate to contact me by email, at: Xenakis.i.contact@gmail.com
