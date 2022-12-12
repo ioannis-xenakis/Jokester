@@ -4,6 +4,11 @@ The app that can make us laugh with its jokes! The android app that shows both d
 
 **WARNING**: Some of the jokes that the app shows, may be offensive for some people. No offense intended. Don't say I didn't warn you. The jokes are there to make us laugh, not offend people. When the 1.0.0-beta releases, it will have an option to show only non-offensive and appropriate jokes for everyone.
 
+## Screenshots
+<div style="display:flex;">
+<img src="screenshots/1.png" width="19%" />
+</div>
+
 ## Tools/ide used for app development
 Built with Android Studio. Use the Stable version to build with me.
 
