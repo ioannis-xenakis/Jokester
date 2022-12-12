@@ -10,7 +10,7 @@ The app that can make us laugh with its jokes! The android app that shows both d
 </div>
 
 ## Tools/ide used for app development
-Built with Android Studio. Use the Stable version to build with me.
+Built with Android Studio. [Use the stable version](https://developer.android.com/studio) to build with me.
 
 ## Contribute
 I would appreciate it a lot to help me build this app and make it better for the people to see and use it.
