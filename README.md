@@ -16,4 +16,11 @@ Thank you for seeing this!
 ## Contact me
 For anything you want, to contact me, don't hesitate to contact me by email, at: Xenakis.i.contact@gmail.com
 
+## Support me
+I would very much appreciate it, if you support me and donate as i don't have any other income at the moment. Any support is appreciated! Thank you, in advance!
+
+<a href="https://www.paypal.com/donate/?hosted_button_id=BHJFLTS2DBGKS">
+  <img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" alt="Donate with PayPal" width="20%" />
+</a>
+
 [![forthebadge](https://forthebadge.com/images/badges/built-for-android.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
