@@ -53,7 +53,6 @@ fun JokesScroller(homeViewModel: HomeViewModel = hiltViewModel()) {
     val isLoading by remember { homeViewModel.isLoading }
     val loadError by remember { homeViewModel.loadError }
     val errorCode by remember { homeViewModel.errorCode }
-    val runOnce by remember { homeViewModel.runOnce }
 
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
@@ -107,7 +106,7 @@ fun JokesScroller(homeViewModel: HomeViewModel = hiltViewModel()) {
                         )
                     }
 
-                    displayJokeProgressIndicator(isLoading, false)
+                    displayJokeProgressIndicator(isLoading, true)
                     displayRetrySection(
                         loadError = loadError,
                         errorCode = errorCode,
@@ -161,7 +160,7 @@ fun JokesScroller(homeViewModel: HomeViewModel = hiltViewModel()) {
     }
 
     Timber.d("isLoading: $isLoading")
-    displayJokeProgressIndicator(isLoading, runOnce)
+    displayJokeProgressIndicator(isLoading, jokeList.isEmpty())
 
 }
 
@@ -220,8 +219,10 @@ fun createIconButton(
  * when the joke list is loading.
  */
 @Composable
-fun displayJokeProgressIndicator(isLoading: Boolean, runOnce: Boolean) {
-    if (isLoading && !runOnce) {
+fun displayJokeProgressIndicator(
+    isLoading: Boolean,
+    jokeListIsEmpty: Boolean = true) {
+    if (isLoading && jokeListIsEmpty) {
         LaunchedEffect(key1 = Unit) {
             Timber.d("Showing progress indicator.")
         }

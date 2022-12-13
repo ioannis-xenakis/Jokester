@@ -42,11 +42,6 @@ class HomeViewModel @Inject constructor(
     var isLoading = mutableStateOf(false)
 
     /**
-     * The boolean for when code in Home Screen is ran only once.
-     */
-    var runOnce = mutableStateOf(false)
-
-    /**
      * The code number for the error type.
      */
     var errorCode = mutableStateOf(0)
@@ -68,7 +63,6 @@ class HomeViewModel @Inject constructor(
                     loadError.value = ""
                     isLoading.value = false
                     jokeList.value += jokeListItems
-                    runOnce.value = true
                     Timber.d("Joke list size: ${jokeList.value.size}")
                     Timber.d("Joke list result is successful. \n \n")
                 }
@@ -76,26 +70,22 @@ class HomeViewModel @Inject constructor(
                     loadError.value = jokeListResult.message!!
                     errorCode.value = jokeListResult.code!!
                     isLoading.value = false
-                    runOnce.value = true
                     Timber.d("Http Error. Joke list not found.")
                 }
                 is Resource.NetworkError -> {
                     loadError.value = jokeListResult.message!!
                     errorCode.value = 0
                     isLoading.value = false
-                    runOnce.value = true
                     Timber.d("No internet connection. Joke list not found.")
                 }
                 is Resource.Error -> {
                     loadError.value = jokeListResult.message!!
                     errorCode.value = 0
                     isLoading.value = false
-                    runOnce.value = true
                     Timber.d("Error found. ${jokeListResult.message}")
                 }
                 is Resource.Loading -> {
                     isLoading.value = true
-                    runOnce.value = true
                 }
             }
         }
