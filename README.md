@@ -18,6 +18,9 @@ I would appreciate it a lot to help me build this app and make it better for the
 - Also, if you want to code with me and help, you can create an issue in [issues tab](https://github.com/ioannis-xenakis/Jokester/issues) to tell me what kind of feature/help you want to suggest, then you can fork the project, clone your forked project to your android studio, create a branch from Develop branch, make your changes on the created branch and pull request on my Develop branch. There's a Github official tutorial about [pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) from your fork to upstream repository(my repository).
 Thank you for seeing this!
 
+## License
+This app/repo, is licensed under the [GNU General Public License(GPL) Version 3.](LICENSE.md)
+
 ## Contact me
 For anything you want, to contact me, don't hesitate to contact me by email, at: Xenakis.i.contact@gmail.com
 
