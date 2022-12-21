@@ -9,6 +9,9 @@ The app that can make us laugh with its jokes! The android app that shows both d
 <img src="screenshots/1.png" width="19%" />
 </div>
 
+## Latest release
+Version 1.0.0 Alpha is out! [Download it from here](https://github.com/ioannis-xenakis/Jokester/releases/download/v1.0.0-alpha/jokester-v1.0.0-alpha.apk) and run/open it from your android device.
+
 ## Tools/ide used for app development
 Built with Android Studio. [Use the stable version](https://developer.android.com/studio) to build with me.
 
@@ -20,6 +23,10 @@ Thank you for seeing this!
 
 ## License
 This app/repo, is licensed under the [GNU General Public License(GPL) Version 3.](LICENSE.md)
+
+## Privacy policy
+[This is the privacy policy](PRIVACY_POLICY.md) that specifies what data and if the Jokester app collects personal data.
+Also specifies for the permissions that the app requests from you and your android device.
 
 ## Contact me
 For anything you want, to contact me, don't hesitate to contact me by email, at: Xenakis.i.contact@gmail.com
