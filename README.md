@@ -9,6 +9,9 @@ The app that can make us laugh with its jokes! The android app that shows both d
 <img src="screenshots/1.png" width="19%" />
 </div>
 
+## Latest release
+Version 1.0.0 Alpha is out! [Download it from here](https://github.com/ioannis-xenakis/Jokester/releases/download/v1.0.0-alpha/jokester-v1.0.0-alpha.apk) and run/open it from your android device.
+
 ## Tools/ide used for app development
 Built with Android Studio. [Use the stable version](https://developer.android.com/studio) to build with me.
 
