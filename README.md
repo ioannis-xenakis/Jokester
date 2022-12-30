@@ -24,6 +24,10 @@ Thank you for seeing this!
 ## License
 This app/repo, is licensed under the [GNU General Public License(GPL) Version 3.](LICENSE.md)
 
+## Privacy policy
+[This is the privacy policy](PRIVACY_POLICY.md) that specifies what data and if the Jokester app collects personal data.
+Also specifies for the permissions that the app requests from you and your android device.
+
 ## Contact me
 For anything you want, to contact me, don't hesitate to contact me by email, at: Xenakis.i.contact@gmail.com
 
