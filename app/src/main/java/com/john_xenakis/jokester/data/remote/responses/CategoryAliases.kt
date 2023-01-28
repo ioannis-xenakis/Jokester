@@ -1,4 +1,7 @@
-package com.john_xenakis.jokester.util
+package com.john_xenakis.jokester.data.remote.responses
+
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 /*
     Jokester is the app for reading jokes and make people laugh.
@@ -22,21 +25,25 @@ package com.john_xenakis.jokester.util
  */
 
 /**
- * The constant variables for usage in other classes in the app.
+ * The api response data class,
+ * for returning all aliases for each joke category,
+ * directly from the joke api.
+ *
+ * @since 10/4(Apr)/2022
+ * @author Ioannis Xenakis
+ * @version 1.0.0-beta
  */
-object Constants {
+@JsonClass(generateAdapter = true)
+data class CategoryAliases(
     /**
-     * The base url address of the api, for getting the data and jokes.
+     * The alias that can be used instead of the default category name.
      */
-    const val BASE_URL = "https://v2.jokeapi.dev"
+    @Json
+    val alias: String,
 
     /**
-     * The jokes to get for each http response/each page from api.
+     * The default category name that is used by default and is equal/resolved to the corresponding alias.
      */
-    const val PAGE_SIZE = 10
-
-    /**
-     * The joke category named "Any".
-     */
-    const val JOKE_CATEGORY_ANY = "Any"
-}
+    @Json
+    val resolved: String
+)

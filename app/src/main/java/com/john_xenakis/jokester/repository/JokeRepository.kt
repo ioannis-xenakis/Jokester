@@ -2,6 +2,7 @@ package com.john_xenakis.jokester.repository
 
 import com.john_xenakis.jokester.data.remote.JokeApi
 import com.john_xenakis.jokester.data.remote.responses.ErrorResponse
+import com.john_xenakis.jokester.data.remote.responses.JokeCategories
 import com.john_xenakis.jokester.data.remote.responses.JokeList
 import com.john_xenakis.jokester.util.Constants.PAGE_SIZE
 import com.john_xenakis.jokester.util.Resource
@@ -40,13 +41,21 @@ import javax.inject.Inject
  *
  * @since 10/4(Apr)/2022
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 interface JokeRepository {
     /**
      * Gets the joke list.
+     * @param jokeCategory The joke category that the jokes gets from.
+     * @return The joke list with its resource class.
      */
-    suspend fun getJokeList(): Resource<JokeList>
+    suspend fun getJokeList(jokeCategory: String): Resource<JokeList>
+
+    /**
+     * Gets all of the joke categories.
+     * @return The joke categories with its resource class.
+     */
+    suspend fun getJokeCategories(): Resource<JokeCategories>
 }
 
 /**
@@ -56,20 +65,29 @@ interface JokeRepository {
  *
  * @since 10/4(Apr)/2022
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 @ActivityScoped
 class JokeRepositoryImpl @Inject constructor(
     private val jokeApi: JokeApi,
     private val dispatcher: CoroutineDispatcher,
 ): JokeRepository {
-    override suspend fun getJokeList(): Resource<JokeList> {
+    override suspend fun getJokeList(jokeCategory: String): Resource<JokeList> {
         return getJokeListApiCall(
             dispatcher = dispatcher
         ) {
             jokeApi.getJokeList(
-                PAGE_SIZE
+                category = jokeCategory,
+                amount = PAGE_SIZE
             )
+        }
+    }
+
+    override suspend fun getJokeCategories(): Resource<JokeCategories> {
+        return getJokeCategoriesApiCall(
+            dispatcher = dispatcher
+        ) {
+            jokeApi.getJokeCategories()
         }
     }
 }
@@ -88,6 +106,40 @@ suspend fun getJokeListApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend
             when (throwable) {
                 is IOException -> Resource.NetworkError(
                     message = "No internet connection."
+                )
+                is HttpException -> {
+                    val convertedErrorBody = convertErrorBody(throwable)
+                    Resource.HttpError(
+                        message = convertedErrorBody?.message,
+                        code = convertedErrorBody?.code
+                    )
+                }
+                else -> Resource.Error(
+                    message = throwable.localizedMessage,
+                    code = null
+                )
+            }
+        }
+    }
+}
+
+/**
+ * The api call for getting the joke categories.
+ * @param dispatcher The coroutine dispatcher.
+ * @param apiCall The block for getting/returning the joke categories.
+ * @return The joke categories with its resource class.
+ */
+suspend fun getJokeCategoriesApiCall(
+    dispatcher: CoroutineDispatcher,
+    apiCall: suspend () -> JokeCategories
+): Resource<JokeCategories> {
+    return withContext(dispatcher) {
+        try {
+            Resource.Success(apiCall.invoke())
+        } catch (throwable: Throwable) {
+            when(throwable) {
+                is IOException -> Resource.NetworkError(
+                    message = "Check your internet connection."
                 )
                 is HttpException -> {
                     val convertedErrorBody = convertErrorBody(throwable)

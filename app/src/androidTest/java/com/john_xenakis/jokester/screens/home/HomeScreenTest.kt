@@ -1,4 +1,4 @@
-package com.john_xenakis.jokester.home
+package com.john_xenakis.jokester.screens.home
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.*
@@ -262,6 +262,249 @@ class HomeScreenTest {
 
         homeScreenRobot(composeTestRule) {
             displayedTopBarTitle()
+        }
+    }
+
+    /**
+     * Ui test if nav drawer is visible,
+     * when nav button is pressed which is on top app bar.
+     */
+    @Test
+    fun testNavDrawerIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavDrawerDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if nav sheet for nav drawer is visible,
+     * when nav button is pressed which is on top app bar.
+     */
+    @Test
+    fun testNavSheetIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if drawer column inside navigation drawer,
+     * is displayed on screen.
+     */
+    @Test
+    fun testDrawerColumnIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedDrawerColumn()
+        }
+    }
+
+    /**
+     * Ui test if laughing icon inside navigation drawer,
+     * is displayed on screen.
+     */
+    @Test
+    fun testDrawerLaughingIconIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedDrawerLaughingIcon()
+        }
+    }
+
+    /**
+     * Ui test if drawer title inside navigation drawer,
+     * is displayed on screen.
+     */
+    @Test
+    fun testDrawerTitleIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedDrawerTitle()
+        }
+    }
+
+    /**
+     * Ui test if drawer title text inside navigation drawer,
+     * is displayed on screen.
+     */
+    @Test
+    fun testDrawerTitleTextIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedDrawerTitleText()
+        }
+    }
+
+    /**
+     * Ui test if categories group title text,
+     * inside navigation drawer, is displayed on screen.
+     */
+    @Test
+    fun testDrawerCategoriesGroupTitle() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedCategoriesGroupTitle()
+        }
+    }
+
+    /**
+     * Ui test if joke categories error text is displayed on screen,
+     * when an ioexception occurs(Network error.
+     * Usually when somethings wrong with internet connection.).
+     */
+    @Test
+    fun testJokeCategoriesDisplayedWhenNetworkError() {
+        mockWebServer.dispatcher = DisconnectDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            waitUntilCategoriesErrorTextDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if joke categories error text is the correct text,
+     * when an ioexception occurs(Network error.
+     * Usually when somethings wrong with internet connection.).
+     */
+    @Test
+    fun testCategoriesErrorTextCorrectWhenNetworkError() {
+        mockWebServer.dispatcher = DisconnectDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            waitUntilCategoriesErrorTextCorrectWhenNetworkError()
+        }
+    }
+
+    /**
+     * Ui test if drawer items divider line(gray horizontal line,
+     * separating joke categories from the other navigation items),
+     * on navigation drawer,
+     * is displayed on screen.
+     */
+    @Test
+    fun testDrawerItemsDividerIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedDrawerItemsDivider()
+        }
+    }
+
+    /**
+     * Ui test if drawer "other" group title text,
+     * on navigation drawer,
+     * is displayed on screen.
+     */
+    @Test
+    fun testDrawerOtherGroupTitleIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedOtherGroupTitle()
+        }
+    }
+
+    /**
+     * Ui test if support me button,
+     * on navigation drawer,
+     * is displayed on screen.
+     */
+    @Test
+    fun testDrawerSupportMeButtonIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedSupportMeButton()
+        }
+    }
+
+    /**
+     * Ui test if text for support me button,
+     * on navigation drawer,
+     * is displayed on screen.
+     */
+    @Test
+    fun testDrawerSupportMeTextIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedSupportMeText()
+        }
+    }
+
+    /**
+     * Ui test if icon for support me button,
+     * on navigation drawer,
+     * is displayed on screen.
+     */
+    @Test
+    fun testDrawerSupportMeIconIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilNavButtonClicked()
+            waitUntilNavSheetDisplayed()
+            displayedSupportMeIcon()
+        }
+    }
+
+    /**
+     * Ui test for checking if nav button
+     * from top app bar,
+     * is displayed.
+     */
+    @Test
+    fun testNavButtonIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            displayedNavButton()
+        }
+    }
+
+    /**
+     * Ui test for checking if nav icon
+     * of nav button from top app bar,
+     * is displayed.
+     */
+    @Test
+    fun testNavIconIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+        homeScreenRobot(composeTestRule) {
+            displayedNavIcon()
         }
     }
 

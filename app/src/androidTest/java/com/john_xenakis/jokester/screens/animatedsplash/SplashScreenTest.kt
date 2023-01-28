@@ -1,11 +1,10 @@
-package com.john_xenakis.jokester
+package com.john_xenakis.jokester.screens.animatedsplash
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.compose.rememberNavController
-import com.john_xenakis.jokester.animatedsplash.AnimatedSplashScreen
 import com.john_xenakis.jokester.ui.theme.JokesterTheme
 import org.junit.Rule
 import org.junit.Test

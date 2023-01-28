@@ -1,4 +1,4 @@
-package com.john_xenakis.jokester.animatedsplash
+package com.john_xenakis.jokester.screens.animatedsplash
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.view.animation.OvershootInterpolator

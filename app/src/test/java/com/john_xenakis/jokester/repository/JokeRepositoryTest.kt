@@ -1,9 +1,7 @@
 package com.john_xenakis.jokester.repository
 
 import com.john_xenakis.jokester.data.remote.JokeApi
-import com.john_xenakis.jokester.data.remote.responses.Flags
-import com.john_xenakis.jokester.data.remote.responses.Joke
-import com.john_xenakis.jokester.data.remote.responses.JokeList
+import com.john_xenakis.jokester.data.remote.responses.*
 import com.john_xenakis.jokester.util.Resource
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -41,7 +39,7 @@ import java.io.IOException
  *
  * @since 10/4(Apr)/2022
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 class JokeRepositoryTest {
 
@@ -66,12 +64,11 @@ class JokeRepositoryTest {
 
     /**
      * Create new jokes, in a joke list.
-     * @param jokesAmount How many jokes to make in a single list.
      * @return A list of jokes.
      */
-    private fun createJokes(jokesAmount: Int): MutableList<Joke> {
+    private fun createJokes(): MutableList<Joke> {
         val jokes = mutableListOf<Joke>()
-        for (jokeNumber in 1..jokesAmount) {
+        for (jokeNumber in 1..10) {
             val testJoke = Joke(
                 category = "Programming", delivery = "Joke delivery $jokeNumber .",
                 flags = Flags(
@@ -95,6 +92,60 @@ class JokeRepositoryTest {
     }
 
     /**
+     * Create the joke categories list, as a list of strings.
+     * @return The joke categories list, as a list of strings.
+     */
+    private fun createJokeCategoriesList(): List<String> {
+        return listOf(
+            "Any",
+            "Misc",
+            "Programming",
+            "Dark",
+            "Pun",
+            "Spooky",
+            "Christmas"
+        )
+    }
+
+    /**
+     * Create the joke category aliases list.
+     * @return The list of joke category aliases.
+     */
+    private fun createJokeCategoryAliases(): List<CategoryAliases> {
+        return listOf(
+            CategoryAliases(
+                "Miscellaneous",
+                "Misc"
+            ),
+            CategoryAliases(
+                "Coding",
+                "Programming"
+            ),
+            CategoryAliases(
+                "Development",
+                "Programming"
+            ),
+            CategoryAliases(
+                "Halloween",
+                "Spooky"
+            )
+        )
+    }
+
+    /**
+     * Create the joke categories.
+     * @return The joke categories.
+     */
+    private fun createJokeCategories(): JokeCategories {
+        return JokeCategories(
+            createJokeCategoriesList(),
+            createJokeCategoryAliases(),
+            false,
+            1676652244350L
+        )
+    }
+
+    /**
      * Test if getting the joke list,
      * can be successful with the use of mocks and mockk.io dependency.
      */
@@ -103,7 +154,7 @@ class JokeRepositoryTest {
     fun testGetJokeListIsSuccessful() {
         runTest {
             val jokesAmount = 10
-            val jokes = createJokes(jokesAmount)
+            val jokes = createJokes()
             val jokeList = JokeList(jokesAmount, false, jokes)
             coEvery { jokeApi.getJokeList(jokesAmount) } returns jokeList
 
@@ -130,7 +181,7 @@ class JokeRepositoryTest {
     @Test
     fun testGetJokeListReturnsSuccessfulNoMocks(){
         runTest {
-            val jokes = createJokes(10)
+            val jokes = createJokes()
             val jokeList = JokeList(10, false, jokes)
             val apiCallResult = getJokeListApiCall(testDispatcher) { jokeList }
             assertEquals(Resource.Success(getJokeListApiCall(testDispatcher) { jokeList }), apiCallResult)
@@ -145,10 +196,11 @@ class JokeRepositoryTest {
     fun testGetJokeListReturnsNetworkError() {
         runTest {
             val jokesAmount = 10
-            val jokes = createJokes(jokesAmount)
+            val jokes = createJokes()
             val jokeList = JokeList(jokesAmount, false, jokes)
             coEvery {
-                jokeApi.getJokeList(jokesAmount) } returns jokeList
+                jokeApi.getJokeList(jokesAmount)
+            } returns jokeList
 
             val apiJokeListResult = jokeApi.getJokeList(jokesAmount)
 
@@ -187,6 +239,103 @@ class JokeRepositoryTest {
             val result = getJokeListApiCall(testDispatcher) { throw IOException() }
 
             assertEquals(Resource.NetworkError<Any>(message = "No internet connection."), result)
+        }
+    }
+
+    /**
+     * Test if getting the joke categories,
+     * can be successful, with the use of mocks and mockk.io dependency.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun testGetJokeCategoriesIsSuccessful() {
+        runTest {
+            coEvery {
+                jokeApi.getJokeCategories()
+            } returns createJokeCategories()
+
+            coEvery {
+                jokeRepository.getJokeCategories()
+            } returns Resource.Success(jokeApi.getJokeCategories())
+
+            assertEquals(
+                Resource.Success(
+                    jokeApi.getJokeCategories()
+                ),
+                jokeRepository.getJokeCategories()
+            )
+            coVerify { jokeRepository.getJokeCategories() }
+        }
+    }
+
+    /**
+     * Test if getting the joke categories can return a network error.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun testGetJokeCategoriesReturnsNetworkError() {
+        runTest {
+            coEvery {
+                jokeRepository.getJokeCategories()
+            } returns Resource.NetworkError(
+                data = null,
+                message = "Check your internet connection."
+            )
+
+            assertEquals(
+                Resource.NetworkError(
+                    data = null,
+                    message = "Check your internet connection."
+                ),
+                jokeRepository.getJokeCategories()
+            )
+            coVerify { jokeRepository.getJokeCategories() }
+        }
+    }
+
+    /**
+     * Test if getting joke categories can fail resulting in a Http Error.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun testGetJokeCategoriesReturnsHttpError() {
+        runTest {
+            coEvery {
+                jokeRepository.getJokeCategories()
+            } returns Resource.HttpError(
+                message = "Too many requests.",
+                code = 429
+            )
+
+            assertEquals(
+                Resource.HttpError<JokeCategories>(
+                    message = "Too many requests.",
+                    code = 429
+                ),
+                jokeRepository.getJokeCategories()
+            )
+            coVerify { jokeRepository.getJokeCategories() }
+        }
+    }
+
+    /**
+     * Test if getting joke categories can fail resulting in an Error.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun testGetJokeCategoriesReturnsError() {
+        runTest {
+            coEvery {
+                jokeRepository.getJokeCategories()
+            } returns Resource.Error(message = "This is an error message.")
+
+            assertEquals(
+                Resource.Error<JokeCategories>(
+                    message = "This is an error message."
+                ),
+                jokeRepository.getJokeCategories()
+            )
+            coVerify { jokeRepository.getJokeCategories() }
         }
     }
 }
