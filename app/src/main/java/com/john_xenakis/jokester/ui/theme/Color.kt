@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
  */
 
 /**
- * Blue color with 65% luminocity.
+ * Blue color with 65% luminosity.
  */
 val Blue65 = Color(0xFF4FA0FF)
 
@@ -32,6 +32,16 @@ val Blue65 = Color(0xFF4FA0FF)
  * Semi transparent blue color with 65% luminosity.
  */
 val SemiTranspBlue65 = Color(0x404FA0FF)
+
+/**
+ * Blue color with 92% luminosity.
+ */
+val Blue92 = Color(0xFFD6E9FF)
+
+/**
+ * Blue color with 97% luminosity.
+ */
+val Blue97 = Color(0xFFF2F8FF)
 
 /**
  * Red color with 40% luminosity.
@@ -52,6 +62,16 @@ val Gray00 = Color(0xFF000000)
  * Gray color(dark gray color) with 27% luminosity.
  */
 val Gray27 = Color(0xFF444444)
+
+/**
+ * Gray color(dark gray color) with 29% luminosity.
+ */
+val Gray29 = Color(0xFF49454F)
+
+/**
+ * Gray color with 47% luminocity.
+ */
+val Gray47 = Color(0xFF79747E)
 
 /**
  * Gray color with 53% luminosity.

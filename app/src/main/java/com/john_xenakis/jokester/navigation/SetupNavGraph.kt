@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.john_xenakis.jokester.animatedsplash.AnimatedSplashScreen
-import com.john_xenakis.jokester.home.HomeScreen
+import com.john_xenakis.jokester.screens.animatedsplash.AnimatedSplashScreen
+import com.john_xenakis.jokester.screens.home.HomeScreen
 
 /*
     Jokester is the app for reading jokes and make people laugh.

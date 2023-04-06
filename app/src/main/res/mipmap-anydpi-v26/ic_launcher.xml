@@ -1,6 +1,5 @@
-package com.john_xenakis.jokester.util
-
-/*
+<?xml version="1.0" encoding="utf-8"?>
+<!--
     Jokester is the app for reading jokes and make people laugh.
     Copyright (C) 2022  Ioannis Xenakis
 
@@ -19,24 +18,8 @@ package com.john_xenakis.jokester.util
 
     Anything you want to contact me for, contact me with an e-mail, at: xenakis.i.contact@gmail.com
     I'll be happy to help you, or discuss anything with you!
- */
-
-/**
- * The constant variables for usage in other classes in the app.
- */
-object Constants {
-    /**
-     * The base url address of the api, for getting the data and jokes.
-     */
-    const val BASE_URL = "https://v2.jokeapi.dev"
-
-    /**
-     * The jokes to get for each http response/each page from api.
-     */
-    const val PAGE_SIZE = 10
-
-    /**
-     * The joke category named "Any".
-     */
-    const val JOKE_CATEGORY_ANY = "Any"
-}
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@mipmap/ic_launcher_background"/>
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+</adaptive-icon>

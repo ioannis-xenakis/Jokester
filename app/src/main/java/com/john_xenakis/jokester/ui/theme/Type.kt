@@ -48,5 +48,15 @@ val FredokaOneTypography = Typography(
     headlineSmall = TextStyle(
         fontFamily = FredokaOne,
         fontSize = 22.sp
+    ),
+
+    titleMedium = TextStyle(
+        fontFamily = FredokaOne,
+        fontSize = 16.sp
+    ),
+
+    titleSmall = TextStyle(
+        fontFamily = FredokaOne,
+        fontSize = 14.sp
     )
 )

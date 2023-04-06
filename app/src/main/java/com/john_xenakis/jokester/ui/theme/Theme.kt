@@ -33,10 +33,15 @@ import androidx.compose.ui.platform.LocalContext
 private val DarkColorPalette = darkColorScheme(
     primary = Gray80,
     onPrimary = Gray00,
+    secondaryContainer = Gray53,
+    onSecondaryContainer = Gray100,
+    surface = Gray27,
+    onSurfaceVariant = Gray80,
     background = Gray27,
     onBackground = Gray100,
     error = Red40,
-    onError = Gray00
+    onError = Gray00,
+    outlineVariant = Gray100
 )
 
 /**
@@ -45,10 +50,15 @@ private val DarkColorPalette = darkColorScheme(
 private val LightColorPalette = lightColorScheme(
     primary = Blue65,
     onPrimary = Gray100,
+    secondaryContainer = Blue92,
+    onSecondaryContainer = Gray00,
+    surface = Blue97,
+    onSurfaceVariant = Gray29,
     background = Gray100,
     onBackground = Gray00,
     error = Red50,
-    onError = Gray100
+    onError = Gray100,
+    outlineVariant = Gray47
 )
 
 /**

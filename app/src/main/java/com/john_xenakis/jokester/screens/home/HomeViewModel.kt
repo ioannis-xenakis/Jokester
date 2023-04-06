@@ -1,8 +1,9 @@
-package com.john_xenakis.jokester.home
+package com.john_xenakis.jokester.screens.home
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.john_xenakis.jokester.data.models.JokeCategoryContent
 import com.john_xenakis.jokester.data.models.JokeContent
 import com.john_xenakis.jokester.repository.JokeRepository
 import com.john_xenakis.jokester.util.Resource
@@ -40,7 +41,7 @@ import javax.inject.Inject
  *
  * @since 10/4(Apr)/2022
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -53,9 +54,19 @@ class HomeViewModel @Inject constructor(
     var jokeList = mutableStateOf<List<JokeContent>>(listOf())
 
     /**
+     * The joke categories list that contains all the joke categories.
+     */
+    var jokeCategoryList = mutableStateOf<List<JokeCategoryContent>>(listOf())
+
+    /**
      * The error message text.
      */
     var loadError = mutableStateOf("")
+
+    /**
+     * The error message text for joke categories.
+     */
+    var loadJokeCategoryError = mutableStateOf("")
 
     /**
      * The boolean for when the app is loading(for ex. loading/getting the jokes).
@@ -63,18 +74,32 @@ class HomeViewModel @Inject constructor(
     var isLoading = mutableStateOf(false)
 
     /**
+     * The boolean for when the app loads the joke categories.
+     */
+    var isCategoriesLoading = mutableStateOf(false)
+
+    /**
      * The code number for the error type.
      */
     var errorCode = mutableStateOf(0)
 
     /**
-     * The function for loading the joke list.
+     * The error code number for joke categories. Determines the error type.
      */
-    fun loadJokeList() {
+    var jokeCategoryErrorCode = mutableStateOf(0)
+
+    /**
+     * The function for loading the joke list.
+     * @param jokeCategory The joke category that the jokes gets from.
+     */
+    fun loadJokeList(jokeCategory: String = "Any") {
         viewModelScope.launch {
             Timber.d("loadJokeList started.")
             isLoading.value = true
-            when(val jokeListResult = jokeRepository.getJokeList()) {
+            when(
+                val jokeListResult = jokeRepository.getJokeList(
+                jokeCategory = jokeCategory
+            )) {
                 is Resource.Success -> {
                     val jokeListItems = jokeListResult.data!!.jokes.mapIndexed { _, joke ->
                         val jokeText = if (joke.type == "twopart") joke.setup + "\n \n" + joke.delivery else joke.joke
@@ -111,4 +136,54 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    /**
+     * Loads the joke categories.
+     */
+    fun loadJokeCategories() {
+        viewModelScope.launch {
+            isCategoriesLoading.value = true
+            when(val jokeCategoriesResult = jokeRepository.getJokeCategories()) {
+                is Resource.Success -> {
+                    val jokeCategoriesItems = jokeCategoriesResult
+                        .data!!
+                        .categories
+                        .mapIndexed {
+                                _, jokeCategory ->
+                            JokeCategoryContent(jokeCategory)
+                        }
+
+                    loadJokeCategoryError.value = ""
+                    isCategoriesLoading.value = false
+                    jokeCategoryList.value = jokeCategoriesItems
+                }
+                is Resource.HttpError -> {
+                    loadJokeCategoryError.value = jokeCategoriesResult.message!!
+                    jokeCategoryErrorCode.value = jokeCategoriesResult.code!!
+                    isCategoriesLoading.value = false
+                }
+                is Resource.NetworkError -> {
+                    loadJokeCategoryError.value = jokeCategoriesResult.message!!
+                    jokeCategoryErrorCode.value = 0
+                    isCategoriesLoading.value = false
+                }
+                is Resource.Error -> {
+                    loadJokeCategoryError.value = jokeCategoriesResult.message!!
+                    jokeCategoryErrorCode.value = 0
+                    isCategoriesLoading.value = false
+                }
+                is Resource.Loading -> {
+                    isCategoriesLoading.value = true
+                }
+            }
+        }
+    }
+
+    /**
+     * Clears and empties the joke list.
+     */
+    fun clearJokeList() {
+        jokeList.value = listOf()
+    }
+
 }

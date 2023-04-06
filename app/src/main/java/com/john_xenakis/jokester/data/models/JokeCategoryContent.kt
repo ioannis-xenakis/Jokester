@@ -1,4 +1,4 @@
-package com.john_xenakis.jokester.util
+package com.john_xenakis.jokester.data.models
 
 /*
     Jokester is the app for reading jokes and make people laugh.
@@ -22,21 +22,15 @@ package com.john_xenakis.jokester.util
  */
 
 /**
- * The constant variables for usage in other classes in the app.
+ * The joke category content data class regarding on what the joke category item should contain.
+ *
+ * @since 10/4(Apr)/2022
+ * @author Ioannis Xenakis
+ * @version 1.0.0-beta
  */
-object Constants {
+data class JokeCategoryContent (
     /**
-     * The base url address of the api, for getting the data and jokes.
+     * The joke category text.
      */
-    const val BASE_URL = "https://v2.jokeapi.dev"
-
-    /**
-     * The jokes to get for each http response/each page from api.
-     */
-    const val PAGE_SIZE = 10
-
-    /**
-     * The joke category named "Any".
-     */
-    const val JOKE_CATEGORY_ANY = "Any"
-}
+    val jokeCategoryText: String
+)

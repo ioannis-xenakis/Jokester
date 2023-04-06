@@ -1,7 +1,9 @@
 package com.john_xenakis.jokester.data.remote
 
+import com.john_xenakis.jokester.data.remote.responses.JokeCategories
 import com.john_xenakis.jokester.data.remote.responses.JokeList
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /*
@@ -30,18 +32,27 @@ import retrofit2.http.Query
  *
  * @since 10/4(Apr)/2022
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 interface JokeApi {
 
     /**
      * Gets the jokes in a joke list from the joke api.
+     * @param category The specified joke category, to get the jokes from.
      * @param amount The amount number of jokes,
      * or how many jokes it should get, from the joke api.
      * @return The joke list with its jokes.
      */
-    @GET("joke/Any")
+    @GET("joke/{category}")
     suspend fun getJokeList(
+        @Path("category") category: String,
         @Query("amount") amount: Int
     ): JokeList
+
+    /**
+     * Gets all the joke categories, from the joke api.
+     * @return The joke categories.
+     */
+    @GET("categories")
+    suspend fun getJokeCategories(): JokeCategories
 }
