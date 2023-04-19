@@ -1,10 +1,12 @@
 package com.john_xenakis.jokester.data.remote
 
+import com.john_xenakis.jokester.data.remote.responses.FlagsList
 import com.john_xenakis.jokester.data.remote.responses.JokeCategories
 import com.john_xenakis.jokester.data.remote.responses.JokeList
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryName
 
 /*
     Jokester is the app for reading jokes and make people laugh.
@@ -30,7 +32,7 @@ import retrofit2.http.Query
 /**
  * The joke api interface with its api requests.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
  * @version 1.0.0-beta
  */
@@ -40,13 +42,17 @@ interface JokeApi {
      * Gets the jokes in a joke list from the joke api.
      * @param category The specified joke category, to get the jokes from.
      * @param amount The amount number of jokes,
+     * @param blacklistFlags The blacklist flags list for filtering joke list.
      * or how many jokes it should get, from the joke api.
+     * @param safeMode The mode for filtering unsafe jokes and showing only safe ones.
      * @return The joke list with its jokes.
      */
     @GET("joke/{category}")
     suspend fun getJokeList(
         @Path("category") category: String,
-        @Query("amount") amount: Int
+        @Query("amount") amount: Int,
+        @Query("blacklistFlags") blacklistFlags: String? = null,
+        @QueryName safeMode: String? = null
     ): JokeList
 
     /**
@@ -55,4 +61,11 @@ interface JokeApi {
      */
     @GET("categories")
     suspend fun getJokeCategories(): JokeCategories
+
+    /**
+     * Gets the joke flags list, from the joke api.
+     * @return The joke flags list.
+     */
+    @GET("flags")
+    suspend fun getJokeFlagsList(): FlagsList
 }

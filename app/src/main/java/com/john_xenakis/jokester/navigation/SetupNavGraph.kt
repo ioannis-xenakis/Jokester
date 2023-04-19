@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.john_xenakis.jokester.screens.about.AboutScreen
 import com.john_xenakis.jokester.screens.animatedsplash.AnimatedSplashScreen
 import com.john_xenakis.jokester.screens.home.HomeScreen
 
@@ -43,8 +44,13 @@ fun SetupNavGraph(navController: NavHostController) {
                 AnimatedSplashScreen(navController = navController)
             }
         }
+
         composable(route = Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
+        }
+
+        composable(route = Screen.About.route) {
+            AboutScreen(navController = navController)
         }
     }
 }

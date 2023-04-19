@@ -13,6 +13,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -47,6 +49,23 @@ import javax.inject.Singleton
 object AppModule {
 
     /**
+     * The interceptor for logging messages about http calls.
+     */
+    val loggingInterceptor = run {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.apply {
+            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        }
+    }
+
+    /**
+     * The okHttp client.
+     */
+    val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .build()
+
+    /**
      * The Moshi instance variable.
      */
     val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
@@ -55,6 +74,7 @@ object AppModule {
      * The retrofit instance variable.
      */
     val retrofit: Retrofit = Retrofit.Builder()
+        .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl(BASE_URL)
         .build()

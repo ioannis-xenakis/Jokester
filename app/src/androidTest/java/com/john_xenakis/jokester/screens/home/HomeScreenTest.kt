@@ -3,6 +3,7 @@ package com.john_xenakis.jokester.screens.home
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.navigation.compose.rememberNavController
 import com.john_xenakis.jokester.MainActivity
 import com.john_xenakis.jokester.data.remote.JokeApi
 import com.john_xenakis.jokester.di.AppModule
@@ -59,9 +60,9 @@ import javax.inject.Inject
 /**
  * Ui test with Jetpack compose, for testing Home Screen.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
@@ -127,7 +128,8 @@ class HomeScreenTest {
     private fun launchHomeScreen() {
         composeTestRule.activity.setContent {
             JokesterTheme {
-                HomeScreen()
+                val navController = rememberNavController()
+                HomeScreen(navController = navController)
             }
         }
     }
@@ -148,6 +150,18 @@ class HomeScreenTest {
     fun testJokeApiNotNull() {
         mockWebServer.dispatcher = SuccessDispatcher()
         assertNotNull(testJokeApi)
+    }
+
+    /**
+     * Test if laughing man image is displayed on home screen.
+     */
+    @Test
+    fun testLaughingManDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilLaughingManDisplayed()
+        }
     }
 
     /**
@@ -262,6 +276,167 @@ class HomeScreenTest {
 
         homeScreenRobot(composeTestRule) {
             displayedTopBarTitle()
+        }
+    }
+
+    /**
+     * Ui test for checking if filter jokes button,
+     * from top bar,
+     * is visible.
+     */
+    @Test
+    fun testFiltersButtonOfTopBarIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            displayedTopBarFilterJokesButton()
+        }
+    }
+
+    /**
+     * Ui test for checking if icon for filter jokes button,
+     * from top bar, is visible.
+     */
+    @Test
+    fun testFiltersIconOfTopBarIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            displayedTopBarFilterJokesIcon()
+        }
+    }
+
+    /**
+     * Ui test for checking if "filter jokes" dialog,
+     * is displayed on screen,
+     * when "filter jokes" button on top bar is clicked.
+     */
+    @Test
+    fun testFilterJokesDialogIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilFilterJokesButtonIsClicked()
+            waitUntilFilterJokesDialogIsDisplayed()
+        }
+    }
+
+    /**
+     * Ui test for checking if "filter jokes" dialog surface,
+     * is displayed on screen,
+     * when "filter jokes" button on top bar is clicked.
+     */
+    @Test
+    fun testFilterJokesDialogSurfaceIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilFilterJokesButtonIsClicked()
+            waitUntilFilterJokesDialogSurfaceIsDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if each joke flag text, in filters list,
+     * is displayed on screen.
+     */
+    @Test
+    fun testFlagInFiltersListIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilFilterJokesButtonIsClicked()
+            waitUntilFlagInFiltersListIsDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if title text,
+     * on filter jokes dialog
+     * is displayed on screen.
+     */
+    @Test
+    fun testFilterJokesTitleTextIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilFilterJokesButtonIsClicked()
+            waitUntilFilterJokesTitleTextIsDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if supporting text,
+     * on filter jokes dialog
+     * is displayed on screen.
+     */
+    @Test
+    fun testFilterJokesSupportingTextIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilFilterJokesButtonIsClicked()
+            waitUntilSupportingTextIsDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if unfilter all jokes text button,
+     * on filter jokes dialog,
+     * is displayed on screen.
+     */
+    @Test
+    fun testFilterJokesUnfilterJokesButtonIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilFilterJokesButtonIsClicked()
+            waitUntilUnfilterJokesButtonIsDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if back text button,
+     * on filter jokes dialog,
+     * is displayed on screen.
+     */
+    @Test
+    fun testBackButtonIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilFilterJokesButtonIsClicked()
+            waitUntilBackButtonIsDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if text on back text button,
+     * on filter jokes dialog,
+     * is displayed on screen.
+     */
+    @Test
+    fun testTextOnBackButtonIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilFilterJokesButtonIsClicked()
+            waitUntilTextOnBackButtonIsDisplayed()
+        }
+    }
+
+    /**
+     * Ui test if text on unfilter all jokes button(text button),
+     * from filter jokes dialog,
+     * is displayed on screen.
+     */
+    @Test
+    fun testFilterJokesUnfilterJokesTextOnButtonIsDisplayed() {
+        mockWebServer.dispatcher = SuccessDispatcher()
+
+        homeScreenRobot(composeTestRule) {
+            waitUntilFilterJokesButtonIsClicked()
+            waitUntilTextOnUnfilterJokesButtonIsDisplayed()
         }
     }
 
@@ -434,50 +609,48 @@ class HomeScreenTest {
     }
 
     /**
-     * Ui test if support me button,
-     * on navigation drawer,
+     * Ui test if navigation drawer item "about jokester",
      * is displayed on screen.
      */
     @Test
-    fun testDrawerSupportMeButtonIsDisplayed() {
+    fun testDrawerItemAboutJokesterIsDisplayed() {
         mockWebServer.dispatcher = SuccessDispatcher()
 
         homeScreenRobot(composeTestRule) {
             waitUntilNavButtonClicked()
             waitUntilNavSheetDisplayed()
-            displayedSupportMeButton()
+            displayedDrawerItemAboutJokester()
         }
     }
 
     /**
-     * Ui test if text for support me button,
-     * on navigation drawer,
+     * Ui test if info icon,
+     * on navigation drawer item "about jokester",
      * is displayed on screen.
      */
     @Test
-    fun testDrawerSupportMeTextIsDisplayed() {
+    fun testDrawerItemAboutJokesterIconIsDisplayed() {
         mockWebServer.dispatcher = SuccessDispatcher()
 
         homeScreenRobot(composeTestRule) {
             waitUntilNavButtonClicked()
             waitUntilNavSheetDisplayed()
-            displayedSupportMeText()
+            displayedDrawerInfoIcon()
         }
     }
 
     /**
-     * Ui test if icon for support me button,
-     * on navigation drawer,
+     * Ui test if navigation drawer item "about jokester" text,
      * is displayed on screen.
      */
     @Test
-    fun testDrawerSupportMeIconIsDisplayed() {
+    fun testDrawerItemAboutJokesterTextIsDisplayed() {
         mockWebServer.dispatcher = SuccessDispatcher()
 
         homeScreenRobot(composeTestRule) {
             waitUntilNavButtonClicked()
             waitUntilNavSheetDisplayed()
-            displayedSupportMeIcon()
+            displayedDrawerAboutJokesterText()
         }
     }
 

@@ -1,6 +1,7 @@
 package com.john_xenakis.jokester.screens.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,12 +20,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.john_xenakis.jokester.data.models.JokeCategoryContent
 import com.john_xenakis.jokester.data.models.JokeContent
+import com.john_xenakis.jokester.data.models.JokeFlagsContent
 import com.john_xenakis.jokester.ui.theme.NoColor
 import com.john_xenakis.jokester.ui.theme.TranspColor
 import john_xenakis.jokester.R
@@ -58,21 +61,51 @@ import timber.log.Timber
  * @param homeViewModel The ViewModel for the home screen.
  */
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    navController: NavController,
+    homeViewModel: HomeViewModel = hiltViewModel()
+) {
     val selectedCategory = remember { mutableStateOf(JokeCategoryContent("Any")) }
+
+    val checkedFlagList = remember { homeViewModel.checkedFlagList }
+
+    val safeMode = remember { homeViewModel.safeMode }
+
+    initializeCheckableFlagStates(homeViewModel)
+
+    putAllFlagStates(homeViewModel)
+
     HomeUI(
         jokeList = remember { homeViewModel.jokeList },
         jokeCategoriesList = remember { homeViewModel.jokeCategoryList },
+        jokeFlagsList = remember { homeViewModel.jokeFlagsList },
+        checkedFlagsState = homeViewModel.checkedFlagsState,
+        checkedSafeFlagState = remember { mutableStateOf(false) },
+        safeMode = safeMode,
+        enabledFlagCheckbox = remember { mutableStateOf(true) },
         loadJokeCategoryError = remember { homeViewModel.loadJokeCategoryError },
         isLoading = remember { homeViewModel.isLoading },
         loadError = remember { homeViewModel.loadError },
         errorCode = remember { homeViewModel.errorCode },
         loadJokeList = { homeViewModel.loadJokeList(
-            selectedCategory.value.jokeCategoryText
+            selectedCategory.value.jokeCategoryText,
+            checkedFlagList.toList(),
+            safeMode.value
         ) },
         clearJokeList = { homeViewModel.clearJokeList() },
         loadJokeCategories = { homeViewModel.loadJokeCategories() },
-        selectedCategory = selectedCategory
+        loadJokeFlags = { homeViewModel.loadJokeFlags() },
+        addToCheckedFlagsList = {
+                jokeFlagsContent ->
+            homeViewModel.addToCheckedFlagsList(jokeFlagsContent)
+        },
+        removeFromCheckedFlagsList = {
+                jokeFlagsContent ->
+            homeViewModel.removeFromCheckedFlagsList(jokeFlagsContent)
+        },
+        selectedCategory = selectedCategory,
+        openDialog = remember { mutableStateOf( false ) },
+        navToAboutScreen = { navController.navigate("about_screen") }
     )
 }
 
@@ -80,6 +113,11 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
  * The content/ui items of the home screen.
  * @param jokeList The list with its jokes.
  * @param jokeCategoriesList The list for the joke categories.
+ * @param jokeFlagsList The list for the joke flags.
+ * @param checkedFlagsState The boolean states(Map) of if flags are checked or not.
+ * @param checkedSafeFlagState The checked/unchecked state for safe mode checkbox.
+ * @param safeMode The mode for showing only safe
+ * and appropriate to everyone, jokes and filtering the unsafe ones.
  * @param loadJokeCategoryError The message text for explaining the reason of the error,
  * for the joke category.
  * @param isLoading The boolean for determining if the jokes are still loading/fetching from the api.
@@ -87,13 +125,21 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
  * @param errorCode The error code number connected with the error.
  * @param loadJokeList The function for loading the joke list.
  * @param loadJokeCategories The function for loading the joke categories.
+ * @param loadJokeFlags The lambda block of loading joke flags.
+ * @param addToCheckedFlagsList Adds checked joke flags to the checked flags list.
+ * @param removeFromCheckedFlagsList Removes checked joke flag from the checked flags list.
  * @param selectedCategory The joke category that is being selected to show its jokes.
+ * @param openDialog The boolean state of if filter jokes dialog is opened or not.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeUI(
     jokeList: MutableState<List<JokeContent>>,
     jokeCategoriesList: MutableState<List<JokeCategoryContent>>,
+    jokeFlagsList: MutableState<List<JokeFlagsContent>> = mutableStateOf(listOf()),
+    checkedFlagsState: MutableMap<Int, MutableState<Boolean>>,
+    checkedSafeFlagState: MutableState<Boolean>,
+    safeMode: MutableState<String?>,
+    enabledFlagCheckbox: MutableState<Boolean>,
     loadJokeCategoryError: MutableState<String>,
     isLoading: MutableState<Boolean>,
     loadError: MutableState<String>,
@@ -101,7 +147,12 @@ fun HomeUI(
     loadJokeList: () -> Unit = {},
     clearJokeList: () -> Unit = {},
     loadJokeCategories: () -> Unit = {},
-    selectedCategory: MutableState<JokeCategoryContent>
+    loadJokeFlags: () -> Unit = {},
+    addToCheckedFlagsList: (JokeFlagsContent) -> Unit = {},
+    removeFromCheckedFlagsList: (JokeFlagsContent) -> Unit = {},
+    selectedCategory: MutableState<JokeCategoryContent>,
+    openDialog: MutableState<Boolean>,
+    navToAboutScreen: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -112,11 +163,12 @@ fun HomeUI(
         loadJokeList = { loadJokeList() },
         clearJokeList = { clearJokeList() },
         loadJokeCategories = { loadJokeCategories() },
+        navToAboutScreen = { navToAboutScreen() },
         drawerState = drawerState,
         scope = scope,
         selectedCategory = selectedCategory
     ) {
-        Scaffold(topBar = { TopAppBar(drawerState, scope) }) { padding ->
+        Scaffold(topBar = { TopAppBar(drawerState, scope, openDialog) }) { padding ->
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -131,6 +183,19 @@ fun HomeUI(
                     loadJokeList = { loadJokeList() },
                     loadJokeCategories = { loadJokeCategories() },
                     scope = scope
+                )
+                FilterJokesDialog(
+                    openDialog = openDialog,
+                    jokeFlagsList = jokeFlagsList,
+                    checkedFlagsState = checkedFlagsState,
+                    checkedSafeFlagState = checkedSafeFlagState,
+                    enabledFlagCheckbox = enabledFlagCheckbox,
+                    loadJokeFlags = loadJokeFlags,
+                    safeMode = safeMode,
+                    loadJokeList = {loadJokeList() },
+                    clearJokeList = clearJokeList,
+                    addToCheckedFlagsList = {jokeFlagsContent -> addToCheckedFlagsList(jokeFlagsContent)},
+                    removeFromCheckedFlagsList = {jokeFlagsContent -> removeFromCheckedFlagsList(jokeFlagsContent) }
                 )
             }
         }
@@ -165,6 +230,21 @@ fun JokesScroller(
         modifier = Modifier
         .fillMaxSize()
     ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            Image(
+                painter = painterResource(
+                    id = R.drawable.laughing_man
+                ),
+                contentDescription = "Laughing man image",
+                modifier = Modifier
+                    .width(139.dp)
+                    .height(127.dp),
+                alignment = Alignment.BottomEnd
+            )
+        }
 
         HorizontalPager(
             modifier = Modifier
@@ -420,7 +500,8 @@ fun DisplayRetrySection(
 @Composable
 fun TopAppBar(
     drawerState: DrawerState,
-    scope: CoroutineScope
+    scope: CoroutineScope,
+    openDialog: MutableState<Boolean>
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier.semantics {
@@ -453,6 +534,18 @@ fun TopAppBar(
                     tint = MaterialTheme.colorScheme.onBackground)
             }
         },
+        actions = {
+            IconButton(
+                onClick = { openDialog.value = true },
+                modifier = Modifier.semantics { contentDescription = "Filter jokes button on top bar" }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.filter_icon),
+                    contentDescription = "Icon for filter jokes button on top bar",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        },
         colors = topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
         )
@@ -480,6 +573,7 @@ fun NavigationDrawer(
     loadJokeList: () -> Unit,
     clearJokeList: () -> Unit,
     loadJokeCategories: () -> Unit,
+    navToAboutScreen: () -> Unit = {},
     scope: CoroutineScope,
     selectedCategory: MutableState<JokeCategoryContent> = mutableStateOf(
         JokeCategoryContent("Any")
@@ -555,47 +649,18 @@ fun NavigationDrawer(
                     )
 
                     jokeCategoriesList.forEach { category ->
-                        NavigationDrawerItem(
-                            modifier = Modifier.semantics {
-                                contentDescription = category.jokeCategoryText + " joke category"
-                            },
-                            icon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.joker_icon),
-                                    contentDescription = "Joke categories icon, in drawer"
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = category.jokeCategoryText,
-                                    style = MaterialTheme.typography.titleSmall,
-                                )
-                            },
-                            selected = category == selectedCategory.value,
+                        DrawerItem(
+                            itemText = category.jokeCategoryText,
+                            selectedBoolean = category == selectedCategory.value,
                             onClick = {
                                 scope.launch { drawerState.close() }
                                 selectedCategory.value = category
                                 clearJokeList()
                                 loadJokeList()
                             },
-                            colors = NavigationDrawerItemDefaults
-                                .colors(
-                                    selectedContainerColor = MaterialTheme
-                                        .colorScheme
-                                        .secondaryContainer,
-                                    selectedIconColor = MaterialTheme
-                                        .colorScheme
-                                        .onSecondaryContainer,
-                                    unselectedIconColor = MaterialTheme
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                    selectedTextColor = MaterialTheme
-                                        .colorScheme
-                                        .onSecondaryContainer,
-                                    unselectedTextColor = MaterialTheme
-                                        .colorScheme
-                                        .onSurfaceVariant
-                                )
+                            itemDescription = category.jokeCategoryText + " joke category",
+                            iconId = R.drawable.joker_icon,
+                            iconDescription = "Joke categories icon, in drawer"
                         )
                     }
 
@@ -637,29 +702,16 @@ fun NavigationDrawer(
                         style = MaterialTheme.typography.titleSmall
                     )
 
-                    NavigationDrawerItem(
-                        label = {
-                            Text(
-                                text = "Support me",
-                                modifier = Modifier.semantics {
-                                    contentDescription = "Text for support me button"
-                                },
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                style = MaterialTheme.typography.titleSmall
-                            )
+                    DrawerItem(
+                        itemText = "About Jokester",
+                        selectedBoolean = false,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            navToAboutScreen()
                         },
-                        selected = false,
-                        onClick = { /*TODO Add onClick functionality for "support me" button.*/ },
-                        modifier = Modifier.semantics {
-                            contentDescription = "Support me button, in navigation drawer"
-                        },
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.dollar_icon),
-                                contentDescription = "Icon for support me button",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
+                        itemDescription = "Drawer item About Jokester",
+                        iconId = R.drawable.info_icon,
+                        iconDescription = "Drawer item icon About Jokester"
                     )
                 }
             }
@@ -668,6 +720,294 @@ fun NavigationDrawer(
         gesturesEnabled = true,
         content = content
     )
+}
+
+/**
+ * Creates navigation drawer item.
+ * @param itemText The item's text as a String.
+ * @param selectedBoolean The boolean if the drawer item is selected or not.
+ * @param onClick The block for managing the click functionality.
+ * @param itemDescription The items content description, explaining what this drawer item is.
+ * @param iconId The drawer items unique id number, used for finding and using the icon.
+ * @param iconDescription The icons content description, in the item,
+ * explaining what the icons is.
+ */
+@Composable
+fun DrawerItem(
+    itemText: String,
+    selectedBoolean: Boolean,
+    onClick: () -> Unit,
+    itemDescription: String,
+    iconId: Int = 0,
+    iconDescription: String = ""
+) {
+    NavigationDrawerItem(
+        label = {
+            Text(
+                text = itemText,
+                style = MaterialTheme.typography.titleSmall
+            )
+        },
+        selected = selectedBoolean,
+        onClick = { onClick() },
+        modifier = Modifier.semantics {
+            contentDescription = itemDescription
+        },
+        icon = {
+            if(iconId != 0) {
+                Icon(
+                    painter = painterResource(id = iconId),
+                    contentDescription = iconDescription
+                )
+            }
+        },
+        colors = NavigationDrawerItemDefaults
+            .colors(
+                selectedContainerColor = MaterialTheme
+                    .colorScheme
+                    .secondaryContainer,
+                selectedIconColor = MaterialTheme
+                    .colorScheme
+                    .onSecondaryContainer,
+                unselectedIconColor = MaterialTheme
+                    .colorScheme
+                    .onSurfaceVariant,
+                selectedTextColor = MaterialTheme
+                    .colorScheme
+                    .onSecondaryContainer,
+                unselectedTextColor = MaterialTheme
+                    .colorScheme
+                    .onSurfaceVariant
+            )
+    )
+}
+
+/**
+ * The dialog for filtering jokes.
+ * @param openDialog The boolean state of if the filter jokes dialog is opened or not.
+ * @param jokeFlagsList The list of joke flags(list of each joke flag content).
+ * @param checkedFlagsState The boolean state of if the flag is checked or not.
+ * @param checkedSafeFlagState The checked state for the safe mode checkbox.
+ * @param enabledFlagCheckbox The enabled/disabled state
+ * for checking/unchecking a flag checkbox.
+ * @param loadJokeFlags The lambda block of loading the joke flags.
+ * @param loadJokeList The lambda block of loading the joke list.
+ * @param clearJokeList The lambda block of clearing the joke list.
+ * @param addToCheckedFlagsList The lambda block of adding
+ * a checked flag to checked flags list.
+ * @param removeFromCheckedFlagsList The lambda block of removing
+ * a checked flag from the checked flags list.
+ * @param safeMode The mode for showing only safe jokes. The mode as a string/text.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilterJokesDialog(
+    openDialog: MutableState<Boolean>,
+    jokeFlagsList: MutableState<List<JokeFlagsContent>>,
+    checkedFlagsState: MutableMap<Int, MutableState<Boolean>>,
+    checkedSafeFlagState: MutableState<Boolean>,
+    enabledFlagCheckbox: MutableState<Boolean>,
+    loadJokeFlags: () -> Unit = {},
+    loadJokeList: () -> Unit = {},
+    clearJokeList: () -> Unit = {},
+    addToCheckedFlagsList: (JokeFlagsContent) -> Unit = {},
+    removeFromCheckedFlagsList: (JokeFlagsContent) -> Unit = {},
+    safeMode: MutableState<String?>
+) {
+    loadJokeFlags()
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                // Dismiss the dialog when user clicks outside the dialog.
+                // If you want to disable this functionality,
+                // simply use empty onDismissRequest block.
+
+                clearJokeList()
+                loadJokeList()
+                openDialog.value = false
+            },
+            modifier = Modifier
+                .semantics { contentDescription = "Filter jokes dialog" }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .semantics { contentDescription = "Filter jokes dialog surface" }
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .wrapContentHeight(Alignment.CenterVertically),
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = AlertDialogDefaults.TonalElevation
+            ) {
+                Column(modifier = Modifier.wrapContentWidth()) {
+                    Text(
+                        text = "Filter jokes",
+                        modifier = Modifier
+                            .semantics {
+                                contentDescription = "Filter jokes title"
+                            }
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp,
+                                top = 24.dp,
+                                bottom = 16.dp
+                            ),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    
+                    Text(
+                        text = "Check to filter, uncheck to unfilter",
+                        modifier = Modifier
+                            .semantics {
+                                contentDescription = "Filter jokes dialog supporting text"
+                            }
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp,
+                                bottom = 24.dp
+                            ),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+
+                    Column(modifier = Modifier.padding(start = 12.dp)) {
+                        jokeFlagsList.value.forEach { jokeFlagsContent ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Checkbox(
+                                    checked = checkedFlagsState[jokeFlagsContent.jokeFlagId]!!.value,
+                                    onCheckedChange = { checked ->
+                                        checkedFlagsState[jokeFlagsContent.jokeFlagId]!!.value =
+                                            checked
+                                        if (checked == true) {
+                                            addToCheckedFlagsList(jokeFlagsContent)
+                                        } else {
+                                            removeFromCheckedFlagsList(jokeFlagsContent)
+                                        }
+                                    },
+                                    enabled = enabledFlagCheckbox.value
+                                )
+
+                                Text(
+                                    text = jokeFlagsContent.jokeFlagName,
+                                    modifier = Modifier
+                                        .semantics {
+                                            contentDescription = "Joke flag in filter list"
+                                        },
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                            }
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = checkedSafeFlagState.value,
+                                onCheckedChange = { checked ->
+                                    checkedSafeFlagState.value = checked
+
+                                    if (checked == true) {
+                                        safeMode.value = "safe-mode"
+                                        enabledFlagCheckbox.value = false
+                                    } else {
+                                        safeMode.value = null
+                                        enabledFlagCheckbox.value = true
+                                    }
+                                }
+                            )
+
+                            Text(
+                                text = "safe",
+                                modifier = Modifier
+                                    .semantics {
+                                        contentDescription = "safe jokes text"
+                                    },
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                        }
+                    }
+
+                    Row(modifier = Modifier.align(Alignment.End)) {
+                        TextButton(
+                            onClick = {
+                                jokeFlagsList.value.forEach { jokeFlagsContent ->
+                                    checkedFlagsState[jokeFlagsContent.jokeFlagId]!!.value = false
+                                    checkedSafeFlagState.value = false
+                                    removeFromCheckedFlagsList(jokeFlagsContent)
+                                    enabledFlagCheckbox.value = true
+                                    safeMode.value = null
+                                }
+                            },
+                            modifier = Modifier
+                                .semantics {
+                                    contentDescription = "Unfilter all jokes text button"
+                                },
+                        ) {
+                            Text(
+                                text = "Unfilter all jokes",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+
+                        TextButton(
+                            onClick = {
+                                clearJokeList()
+                                loadJokeList()
+                                openDialog.value = false
+                            },
+                            modifier = Modifier
+                                .semantics {
+                                    contentDescription = "Back text button"
+                                }
+                        ) {
+                            Text(
+                                text = "Back",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Gets the flags list of checkable states.
+ * @param flagsList The joke flags list.
+ * @return The states into a Map.
+ */
+private fun getCheckableListStates(
+    flagsList: List<JokeFlagsContent>
+): MutableMap<Int, MutableState<Boolean>> {
+    val states = mutableMapOf<Int, MutableState<Boolean>>()
+    flagsList.forEach { jokeFlagsContent ->
+        states[jokeFlagsContent.jokeFlagId] = mutableStateOf(jokeFlagsContent.filteredBoolean)
+    }
+    return states
+}
+
+/**
+ * Initializes the states of checkable flags.
+ * @param homeViewModel The ViewModel for the home screen.
+ */
+private fun initializeCheckableFlagStates(homeViewModel: HomeViewModel) {
+    homeViewModel.jokeFlagsList.value.forEach { jokeFlagsContent ->
+        homeViewModel.checkedFlagsState[jokeFlagsContent.jokeFlagId] = mutableStateOf(false)
+    }
+}
+
+/**
+ * If checkable flags states is empty, it gets and adds all the flag states.
+ * Essentially filling the states of checked flags.
+ * @param homeViewModel The ViewModel for the home screen.
+ */
+private fun putAllFlagStates(homeViewModel: HomeViewModel) {
+    if (homeViewModel.checkedFlagsState.isEmpty()) {
+        homeViewModel
+            .checkedFlagsState
+            .putAll(getCheckableListStates(homeViewModel.checkedFlagList))
+    }
 }
 
 /**
@@ -694,17 +1034,20 @@ fun HomeScreenLightPreview() {
                     JokeContent("This is a test joke.")
                 )
             )
-                            },
+        },
         jokeCategoriesList = remember {
             mutableStateOf(
                 listOf(
                     JokeCategoryContent("This is a joke category test.")
                 )
             )
-                                      },
+        },
+        checkedFlagsState = mutableMapOf(),
+        checkedSafeFlagState = remember { mutableStateOf(false) },
+        enabledFlagCheckbox = remember { mutableStateOf(false) },
         loadJokeCategoryError = remember {
             mutableStateOf("This is a Joke category error text.")
-                                         },
+        },
         errorCode = remember { mutableStateOf(200) },
         isLoading = remember { mutableStateOf(false) },
         loadError = remember { mutableStateOf("") },
@@ -712,7 +1055,9 @@ fun HomeScreenLightPreview() {
             mutableStateOf(
                 JokeCategoryContent("This is a joke category test.")
             )
-        }
+        },
+        openDialog = remember { mutableStateOf(false) },
+        safeMode = remember { mutableStateOf(null) }
     )
 }
 
@@ -737,6 +1082,9 @@ fun HomeScreenDarkPreview() {
                 )
             )
         },
+        checkedFlagsState = mutableMapOf(),
+        checkedSafeFlagState = remember{ mutableStateOf(false) },
+        enabledFlagCheckbox = remember { mutableStateOf(false) },
         loadJokeCategoryError = remember {
             mutableStateOf("This is a Joke category error text.")
         },
@@ -747,7 +1095,9 @@ fun HomeScreenDarkPreview() {
             mutableStateOf(
                 JokeCategoryContent("This is a joke category test.")
             )
-        }
+        },
+        openDialog = remember { mutableStateOf(false) },
+        safeMode = remember { mutableStateOf(null) }
     )
 }
 
@@ -774,4 +1124,34 @@ fun NavigationDrawerPreview() {
         },
         drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
     ) {}
+}
+
+/**
+ * The "filter jokes" dialog and how it looks.
+ */
+@Composable
+@Preview(showSystemUi = true)
+fun FilterJokesDialogPreview() {
+    FilterJokesDialog(
+        openDialog = remember {mutableStateOf(true)},
+        jokeFlagsList = remember {
+            mutableStateOf(
+                listOf(
+                    JokeFlagsContent(jokeFlagId = 0, jokeFlagName = "Joke flag 1"),
+                    JokeFlagsContent(jokeFlagId = 1, jokeFlagName = "Joke flag 2"),
+                    JokeFlagsContent(jokeFlagId = 2, jokeFlagName = "Flag 3")
+                )
+            )
+        },
+        checkedFlagsState = remember {
+            mutableMapOf(
+                Pair(0, mutableStateOf(true)),
+                Pair(1, mutableStateOf(false)),
+                Pair(2, mutableStateOf(false))
+            )
+        },
+        checkedSafeFlagState = remember { mutableStateOf(false) },
+        enabledFlagCheckbox = remember { mutableStateOf(false) },
+        safeMode = remember { mutableStateOf(null ) }
+    )
 }

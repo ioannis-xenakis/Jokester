@@ -30,9 +30,9 @@ import dagger.hilt.android.testing.HiltTestApplication
  * Custom Test Runner for hilt, running the app.
  * This runner is only for instrumentation tests.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 class CustomTestRunner : AndroidJUnitRunner() {
     override fun newApplication(

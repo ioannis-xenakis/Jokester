@@ -37,7 +37,7 @@ import java.io.IOException
 /**
  * Unit test with Mockk.io for mocking, for testing Joke Repository.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
  * @version 1.0.0-beta
  */
@@ -149,26 +149,25 @@ class JokeRepositoryTest {
      * Test if getting the joke list,
      * can be successful with the use of mocks and mockk.io dependency.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testGetJokeListIsSuccessful() {
         runTest {
             val jokesAmount = 10
             val jokes = createJokes()
             val jokeList = JokeList(jokesAmount, false, jokes)
-            coEvery { jokeApi.getJokeList(jokesAmount) } returns jokeList
+            coEvery { jokeApi.getJokeList("", jokesAmount, null) } returns jokeList
 
-            val apiJokeListResult = jokeApi.getJokeList(jokesAmount)
+            val apiJokeListResult = jokeApi.getJokeList("", jokesAmount, null)
 
-            coVerify { jokeApi.getJokeList(jokesAmount) }
+            coVerify { jokeApi.getJokeList("", jokesAmount, null) }
             assertEquals(jokeList, apiJokeListResult)
 
             val resourceSuccess = Resource.Success(apiJokeListResult)
-            coEvery { jokeRepository.getJokeList() } returns resourceSuccess
+            coEvery { jokeRepository.getJokeList("", "") } returns resourceSuccess
 
-            val repoJokeListResult = jokeRepository.getJokeList()
+            val repoJokeListResult = jokeRepository.getJokeList("", "")
 
-            coVerify { jokeRepository.getJokeList() }
+            coVerify { jokeRepository.getJokeList("", "") }
             assertEquals(resourceSuccess, repoJokeListResult)
         }
     }
@@ -177,7 +176,6 @@ class JokeRepositoryTest {
      * Test if getting the joke list from api call (getJokeListApiCall() function),
      * returns successfully the data(jokes), the alternative way without mocks and mockk.io dependency.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testGetJokeListReturnsSuccessfulNoMocks(){
         runTest {
@@ -191,7 +189,6 @@ class JokeRepositoryTest {
     /**
      * Test if getting the joke list can return a "Network Error".
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testGetJokeListReturnsNetworkError() {
         runTest {
@@ -199,12 +196,12 @@ class JokeRepositoryTest {
             val jokes = createJokes()
             val jokeList = JokeList(jokesAmount, false, jokes)
             coEvery {
-                jokeApi.getJokeList(jokesAmount)
+                jokeApi.getJokeList("", jokesAmount, null)
             } returns jokeList
 
-            val apiJokeListResult = jokeApi.getJokeList(jokesAmount)
+            val apiJokeListResult = jokeApi.getJokeList("", jokesAmount, null)
 
-            coVerify { jokeApi.getJokeList(jokesAmount) }
+            coVerify { jokeApi.getJokeList("", jokesAmount) }
             assertEquals(jokeList, apiJokeListResult)
 
             val resourceNetworkError = Resource.NetworkError(
@@ -213,13 +210,13 @@ class JokeRepositoryTest {
             )
 
             coEvery {
-                jokeRepository.getJokeList()
+                jokeRepository.getJokeList("", "")
             } returns resourceNetworkError
 
-            val jokeRepositoryResult = jokeRepository.getJokeList()
+            val jokeRepositoryResult = jokeRepository.getJokeList("", "")
 
             coVerify {
-                jokeRepository.getJokeList()
+                jokeRepository.getJokeList("", "")
             }
 
             assertEquals(
@@ -232,7 +229,6 @@ class JokeRepositoryTest {
     /**
      * Test if getting joke list throws an IOException thus returning Network Error at the end.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testGetJokeListIsIOException() {
         runTest {
@@ -246,7 +242,6 @@ class JokeRepositoryTest {
      * Test if getting the joke categories,
      * can be successful, with the use of mocks and mockk.io dependency.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testGetJokeCategoriesIsSuccessful() {
         runTest {
@@ -271,7 +266,6 @@ class JokeRepositoryTest {
     /**
      * Test if getting the joke categories can return a network error.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testGetJokeCategoriesReturnsNetworkError() {
         runTest {
@@ -296,7 +290,6 @@ class JokeRepositoryTest {
     /**
      * Test if getting joke categories can fail resulting in a Http Error.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testGetJokeCategoriesReturnsHttpError() {
         runTest {
@@ -321,7 +314,6 @@ class JokeRepositoryTest {
     /**
      * Test if getting joke categories can fail resulting in an Error.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testGetJokeCategoriesReturnsError() {
         runTest {

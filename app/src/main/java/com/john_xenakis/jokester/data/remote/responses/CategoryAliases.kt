@@ -29,7 +29,7 @@ import com.squareup.moshi.JsonClass
  * for returning all aliases for each joke category,
  * directly from the joke api.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
  * @version 1.0.0-beta
  */

@@ -6,8 +6,6 @@ import com.john_xenakis.jokester.data.remote.responses.JokeList
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -36,19 +34,15 @@ import org.junit.Test
 /**
  * Unit test, for testing Joke Api.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 class JokeApiTest {
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val testDispatcher = StandardTestDispatcher()
 
     /**
      * Test if getting the joke list is successful.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun testGetJokeListIsSuccessful() {
         runTest {
@@ -78,11 +72,11 @@ class JokeApiTest {
             val jokeApi = mockk<JokeApi>()
             val jokeList = JokeList(jokesAmount, false, jokes)
 
-            coEvery { jokeApi.getJokeList(jokesAmount) } returns jokeList
+            coEvery { jokeApi.getJokeList("", jokesAmount, null) } returns jokeList
 
-            val apiJokeListResult = jokeApi.getJokeList(jokesAmount)
+            val apiJokeListResult = jokeApi.getJokeList("", jokesAmount, null)
 
-            coVerify { jokeApi.getJokeList(jokesAmount) }
+            coVerify { jokeApi.getJokeList("", jokesAmount, null) }
             assertEquals(jokeList, apiJokeListResult)
         }
     }

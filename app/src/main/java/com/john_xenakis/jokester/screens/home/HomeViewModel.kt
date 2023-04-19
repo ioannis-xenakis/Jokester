@@ -1,10 +1,12 @@
 package com.john_xenakis.jokester.screens.home
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.john_xenakis.jokester.data.models.JokeCategoryContent
 import com.john_xenakis.jokester.data.models.JokeContent
+import com.john_xenakis.jokester.data.models.JokeFlagsContent
 import com.john_xenakis.jokester.repository.JokeRepository
 import com.john_xenakis.jokester.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,7 +41,7 @@ import javax.inject.Inject
  * @param jokeRepository The repository for getting jokes/calling requests to/from the api.
  * @return The ViewModel class.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
  * @version 1.0.0-beta
  */
@@ -59,6 +61,16 @@ class HomeViewModel @Inject constructor(
     var jokeCategoryList = mutableStateOf<List<JokeCategoryContent>>(listOf())
 
     /**
+     * The joke flags list that contains the joke flags.
+     */
+    var jokeFlagsList = mutableStateOf<List<JokeFlagsContent>>(listOf())
+
+    /**
+     * The list for checked(filtered) blacklist flags.
+     */
+    var checkedFlagList = mutableListOf<JokeFlagsContent>()
+
+    /**
      * The error message text.
      */
     var loadError = mutableStateOf("")
@@ -67,6 +79,11 @@ class HomeViewModel @Inject constructor(
      * The error message text for joke categories.
      */
     var loadJokeCategoryError = mutableStateOf("")
+
+    /**
+     * The error message text for joke flags.
+     */
+    var loadJokeFlagsError = mutableStateOf("")
 
     /**
      * The boolean for when the app is loading(for ex. loading/getting the jokes).
@@ -79,6 +96,21 @@ class HomeViewModel @Inject constructor(
     var isCategoriesLoading = mutableStateOf(false)
 
     /**
+     * The boolean for when the app loads the joke flags.
+     */
+    var isJokeFlagsLoading = mutableStateOf(false)
+
+    /**
+     * The state of the flags, checked or not.
+     */
+    var checkedFlagsState = mutableMapOf<Int, MutableState<Boolean>>()
+
+    /**
+     * The mode for safe jokes as a string.
+     */
+    var safeMode = mutableStateOf<String?>(null)
+
+    /**
      * The code number for the error type.
      */
     var errorCode = mutableStateOf(0)
@@ -89,16 +121,32 @@ class HomeViewModel @Inject constructor(
     var jokeCategoryErrorCode = mutableStateOf(0)
 
     /**
+     * The error code number for joke flags when the api request fails.
+     * Determines the error type.
+     */
+    var jokeFlagsErrorCode = mutableStateOf(0)
+
+    /**
      * The function for loading the joke list.
      * @param jokeCategory The joke category that the jokes gets from.
+     * @param flagList The blacklist flag list for filtering joke list.
+     * @param safeMode The mode for filtering unsafe jokes
+     * and showing only appropriate and safe jokes.
      */
-    fun loadJokeList(jokeCategory: String = "Any") {
+    fun loadJokeList(
+        jokeCategory: String = "Any",
+        flagList: List<JokeFlagsContent>,
+        safeMode: String? = null
+    ) {
         viewModelScope.launch {
             Timber.d("loadJokeList started.")
             isLoading.value = true
+            var flagsString = convertCheckedFlagsToStringWithCommas(flagList)
             when(
                 val jokeListResult = jokeRepository.getJokeList(
-                jokeCategory = jokeCategory
+                    jokeCategory = jokeCategory,
+                    flags = flagsString,
+                    safeMode = safeMode
             )) {
                 is Resource.Success -> {
                     val jokeListItems = jokeListResult.data!!.jokes.mapIndexed { _, joke ->
@@ -177,6 +225,82 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    /**
+     * Loads the joke flags.
+     */
+    fun loadJokeFlags() {
+        viewModelScope.launch {
+            isJokeFlagsLoading.value = true
+            when(val jokeFlagsListResult = jokeRepository.getJokeFlagsList()) {
+                is Resource.Success -> {
+                    val jokeFlags = jokeFlagsListResult
+                        .data!!
+                        .flags
+                        .mapIndexed { index, jokeFlag ->
+                            JokeFlagsContent(jokeFlagId = index, jokeFlagName = jokeFlag)
+                        }
+                    loadJokeFlagsError.value = ""
+                    isJokeFlagsLoading.value = false
+                    jokeFlagsList.value = jokeFlags
+                }
+                is Resource.HttpError -> {
+                    loadJokeFlagsError.value = jokeFlagsListResult.message!!
+                    jokeFlagsErrorCode.value = jokeFlagsListResult.code!!
+                    isJokeFlagsLoading.value = false
+                }
+                is Resource.NetworkError -> {
+                    loadJokeFlagsError.value = jokeFlagsListResult.message!!
+                    jokeFlagsErrorCode.value = 0
+                    isJokeFlagsLoading.value = false
+                }
+                is Resource.Error -> {
+                    loadJokeFlagsError.value = jokeFlagsListResult.message!!
+                    jokeFlagsErrorCode.value = 0
+                    isJokeFlagsLoading.value = false
+                }
+                is Resource.Loading -> {
+                    isJokeFlagsLoading.value = true
+                }
+            }
+        }
+    }
+
+    /**
+     * Converts the checked flags, into a single string separated with commas.
+     * @param checkedFlagsList The list of checked flags(list of JokeFlagsContent class).
+     * @return The checked flags string separated with commas.
+     */
+    private fun convertCheckedFlagsToStringWithCommas(checkedFlagsList: List<JokeFlagsContent>): String? {
+        var checkedFlagsString: String?
+        if (checkedFlagsList.isNotEmpty()) {
+            checkedFlagsString = ""
+            checkedFlagsList.forEach { jokeFlagsContent ->
+                checkedFlagsString += ",${jokeFlagsContent.jokeFlagName}"
+            }
+            checkedFlagsString = checkedFlagsString.removePrefix(",")
+        } else {
+            checkedFlagsString = null
+        }
+
+        return checkedFlagsString
+    }
+
+    /**
+     * Adds the checked flags into the checked flags list.
+     * @param jokeFlagsContent The content of a joke flag. Essentially the joke flag itself.
+     */
+    fun addToCheckedFlagsList(jokeFlagsContent: JokeFlagsContent) {
+        checkedFlagList.add(jokeFlagsContent)
+    }
+
+    /**
+     * Removes the checked flag from the checked flags list.
+     * @param jokeFlagsContent The content of a joke flag. Essentially the joke flag itself.
+     */
+    fun removeFromCheckedFlagsList(jokeFlagsContent: JokeFlagsContent) {
+        checkedFlagList.remove(jokeFlagsContent)
     }
 
     /**

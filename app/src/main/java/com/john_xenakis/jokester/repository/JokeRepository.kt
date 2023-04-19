@@ -2,6 +2,7 @@ package com.john_xenakis.jokester.repository
 
 import com.john_xenakis.jokester.data.remote.JokeApi
 import com.john_xenakis.jokester.data.remote.responses.ErrorResponse
+import com.john_xenakis.jokester.data.remote.responses.FlagsList
 import com.john_xenakis.jokester.data.remote.responses.JokeCategories
 import com.john_xenakis.jokester.data.remote.responses.JokeList
 import com.john_xenakis.jokester.util.Constants.PAGE_SIZE
@@ -47,15 +48,23 @@ interface JokeRepository {
     /**
      * Gets the joke list.
      * @param jokeCategory The joke category that the jokes gets from.
+     * @param flags The blacklist flags in a string, for filtering joke list.
+     * @param safeMode THe mode for showing only safe jokes and appropriate for anyone.
      * @return The joke list with its resource class.
      */
-    suspend fun getJokeList(jokeCategory: String): Resource<JokeList>
+    suspend fun getJokeList(jokeCategory: String, flags: String?, safeMode: String? = null): Resource<JokeList>
 
     /**
      * Gets all of the joke categories.
      * @return The joke categories with its resource class.
      */
     suspend fun getJokeCategories(): Resource<JokeCategories>
+
+    /**
+     * Gets the joke flags list.
+     * @return The joke flags list.
+     */
+    suspend fun getJokeFlagsList(): Resource<FlagsList>
 }
 
 /**
@@ -72,13 +81,15 @@ class JokeRepositoryImpl @Inject constructor(
     private val jokeApi: JokeApi,
     private val dispatcher: CoroutineDispatcher,
 ): JokeRepository {
-    override suspend fun getJokeList(jokeCategory: String): Resource<JokeList> {
+    override suspend fun getJokeList(jokeCategory: String, flags: String?, safeMode: String?): Resource<JokeList> {
         return getJokeListApiCall(
             dispatcher = dispatcher
         ) {
             jokeApi.getJokeList(
                 category = jokeCategory,
-                amount = PAGE_SIZE
+                amount = PAGE_SIZE,
+                blacklistFlags = flags,
+                safeMode = safeMode
             )
         }
     }
@@ -88,6 +99,14 @@ class JokeRepositoryImpl @Inject constructor(
             dispatcher = dispatcher
         ) {
             jokeApi.getJokeCategories()
+        }
+    }
+
+    override suspend fun getJokeFlagsList(): Resource<FlagsList> {
+        return getJokeFlagsListApiCall(
+            dispatcher = dispatcher
+        ) {
+            jokeApi.getJokeFlagsList()
         }
     }
 }
@@ -133,6 +152,40 @@ suspend fun getJokeCategoriesApiCall(
     dispatcher: CoroutineDispatcher,
     apiCall: suspend () -> JokeCategories
 ): Resource<JokeCategories> {
+    return withContext(dispatcher) {
+        try {
+            Resource.Success(apiCall.invoke())
+        } catch (throwable: Throwable) {
+            when(throwable) {
+                is IOException -> Resource.NetworkError(
+                    message = "Check your internet connection."
+                )
+                is HttpException -> {
+                    val convertedErrorBody = convertErrorBody(throwable)
+                    Resource.HttpError(
+                        message = convertedErrorBody?.message,
+                        code = convertedErrorBody?.code
+                    )
+                }
+                else -> Resource.Error(
+                    message = throwable.localizedMessage,
+                    code = null
+                )
+            }
+        }
+    }
+}
+
+/**
+ * The api call for getting the joke flags list.
+ * @param dispatcher The coroutine dispatcher.
+ * @param apiCall The block for getting/returning the joke flags.
+ * @return The joke flags list with its resource class.
+ */
+suspend fun getJokeFlagsListApiCall(
+    dispatcher: CoroutineDispatcher,
+    apiCall: suspend () -> FlagsList
+): Resource<FlagsList> {
     return withContext(dispatcher) {
         try {
             Resource.Success(apiCall.invoke())
