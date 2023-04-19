@@ -56,6 +56,13 @@ internal open class HomeScreenRobot constructor(
     }
 
     /**
+     * The image of a laughing man(node). Node found with its content description.
+     */
+    private val nodeLaughingManImage by lazy {
+        composeTestRule.onNodeWithContentDescription("Laughing man image")
+    }
+
+    /**
      * The circular joke progress indicator ui element(node) for testing usage. Node found with its content description.
      */
     private val nodeJokeIndicator by lazy {
@@ -89,6 +96,24 @@ internal open class HomeScreenRobot constructor(
      */
     private val nodeTopBarTitle by lazy {
         composeTestRule.onNodeWithContentDescription("Title text on top app bar")
+    }
+
+    /**
+     * The icon for filter jokes button, on top app bar,
+     * is a ui element(node), used for testing usage.
+     * Node found with its content description.
+     */
+    private val nodeTopBarFilterJokesIcon by lazy {
+        composeTestRule.onNodeWithContentDescription("Icon for filter jokes button on top bar")
+    }
+
+    /**
+     * The filter jokes button, on top app bar,
+     * is a ui element(node), used for testing usage.
+     * Node found with its content description.
+     */
+    private val nodeTopBarFilterJokesButton by lazy {
+        composeTestRule.onNodeWithContentDescription("Filter jokes button on top bar")
     }
 
     /**
@@ -185,6 +210,33 @@ internal open class HomeScreenRobot constructor(
     }
 
     /**
+     * The navigation drawer item "about jokester",
+     * is a ui element(node), which is used for testing usage.
+     * Node found with its content description.
+     */
+    private val nodeDrawerItemAboutJokester by lazy {
+        composeTestRule.onNodeWithContentDescription("Drawer item About Jokester")
+    }
+
+    /**
+     * The info icon, which is in the navigation drawer
+     * and is a ui element(node), which is used for testing usage.
+     * Node found with its content description.
+     */
+    private val nodeDrawerInfoIcon by lazy {
+        composeTestRule.onNodeWithContentDescription("Drawer item icon About Jokester")
+    }
+
+    /**
+     * The navigation drawer item "about jokester" text
+     * is a ui element(node), which is used for testing usage.
+     * Node found with its text.
+     */
+    private val nodeDrawerItemAboutJokesterText by lazy {
+        composeTestRule.onNodeWithText("About Jokester")
+    }
+
+    /**
      * The joke categories error text,
      * which is in the navigation drawer
      * and is a ui element(node) for testing usage.
@@ -193,42 +245,6 @@ internal open class HomeScreenRobot constructor(
     private val nodeCategoriesErrorText by lazy {
         composeTestRule.onNodeWithContentDescription(
             "Joke categories error text, in navigation drawer"
-        )
-    }
-
-    /**
-     * The support me button,
-     * which is in the navigation drawer
-     * and is a ui element(node) which is used for testing.
-     * Node found with its content description.
-     */
-    private val nodeSupportMeButton by lazy {
-        composeTestRule.onNodeWithContentDescription(
-            "Support me button, in navigation drawer"
-        )
-    }
-
-    /**
-     * The dollar icon for the support me button,
-     * which is in the navigation drawer
-     * and is a ui element(node) which is used for testing.
-     * Node found with its content description.
-     */
-    private val nodeIconForSupportMeButton by lazy {
-        composeTestRule.onNodeWithContentDescription(
-            "Icon for support me button"
-        )
-    }
-
-    /**
-     * The text for the support me button,
-     * which is in the navigation drawer
-     * and is a ui element(node) which is used for testing.
-     * Node found with its content description.
-     */
-    private val nodeTextForSupportMeButton by lazy {
-        composeTestRule.onNodeWithContentDescription(
-            "Text for support me button"
         )
     }
 
@@ -244,6 +260,90 @@ internal open class HomeScreenRobot constructor(
         composeTestRule.onNodeWithContentDescription(
             "Drawer items divider"
         )
+    }
+
+    /**
+     * The filter jokes dialog.
+     * Node filter jokes dialog,
+     * is found with its content description.
+     */
+    private val nodeFilterJokesDialog by lazy {
+        composeTestRule.onNodeWithContentDescription(
+            "Filter jokes dialog"
+        )
+    }
+
+    /**
+     * The filter jokes dialog surface.
+     * Node filter jokes dialog surface,
+     * is found with its content description.
+     */
+    private val nodeFilterJokesDialogSurface by lazy {
+        composeTestRule.onNodeWithContentDescription(
+            "Filter jokes dialog surface"
+        )
+    }
+
+    /**
+     * The unfilter all jokes text button.
+     * Node found with its content description.
+     */
+    private val nodeUnfilterJokesButton by lazy {
+        composeTestRule.onNodeWithContentDescription(
+            "Unfilter all jokes text button"
+        )
+    }
+
+    /**
+     * The text that is shown on unfilter jokes button(text button).
+     * Node found with its text.
+     */
+    private val nodeTextOnUnfilterJokesButton by lazy {
+        composeTestRule.onNodeWithText("Unfilter all jokes")
+    }
+
+    /**
+     * The title text on filter jokes dialog.
+     * Node is found with its content description.
+     */
+    private val nodeFilterJokesTitleText by lazy {
+        composeTestRule.onNodeWithContentDescription(
+            "Filter jokes title"
+        )
+    }
+
+    /**
+     * The supporting text on filter jokes dialog.
+     * Node is found with its content description.
+     */
+    private val nodeFilterJokesSupportingText by lazy {
+        composeTestRule.onNodeWithContentDescription(
+            "Filter jokes dialog supporting text"
+        )
+    }
+
+    /**
+     * The joke flag text in each joke flag, in filter list, on filter jokes dialog.
+     * Node is found with its content description.
+     */
+    private val nodeFlagTextInFilterList by lazy {
+        composeTestRule.onNodeWithContentDescription("Joke flag in filter list")
+    }
+
+    /**
+     * The back text button, on filter jokes dialog.
+     * Node is found with its content description.
+     */
+    private val nodeFilterJokesBackButton by lazy {
+        composeTestRule.onNodeWithContentDescription("Back text button")
+    }
+
+    /**
+     * The text on back text button, from filter jokes dialog.
+     * Node is found with its text.
+     */
+    private val nodeTextOnFilterJokesBackButton by lazy {
+        composeTestRule.onNodeWithText("Back")
     }
 
     /**
@@ -309,7 +409,25 @@ internal open class HomeScreenRobot constructor(
      */
     private fun waitUntilSeeNodeCd(contentDescription: String) {
         composeTestRule.waitUntil(3000L) {
-            composeTestRule.onAllNodesWithContentDescription(label = contentDescription).fetchSemanticsNodes().size == 1
+            composeTestRule
+                .onAllNodesWithContentDescription(label = contentDescription)
+                .fetchSemanticsNodes().size == 1
+        }
+    }
+
+    /**
+     * The test waits until a specified node with text is displayed on screen
+     * and the test code continues.
+     *
+     * Also it has a timeout. If the node is not seen on screen(the untilBoolean)
+     * and the waiting time exceeds the timeout, the test fails.
+     * @param text The text that is displayed on screen.
+     */
+    private fun waitUntilSeeNodeText(text: String) {
+        composeTestRule.waitUntil(3000L) {
+            composeTestRule
+                .onAllNodesWithText(text = text)
+                .fetchSemanticsNodes().size == 1
         }
     }
 
@@ -336,6 +454,18 @@ internal open class HomeScreenRobot constructor(
      * If it is not displayed, the test is failed.
      */
     fun displayedTopBarTitle() = nodeTopBarTitle.assertIsDisplayed()
+
+    /**
+     * Asserts the test that the top app bar filter jokes button, is displayed on screen.
+     * If it is not displayed, the test fails.
+     */
+    fun displayedTopBarFilterJokesButton() = nodeTopBarFilterJokesButton.assertIsDisplayed()
+
+    /**
+     * Asserts the test that the icon for filter jokes button, on top bar,
+     * is displayed on screen. If it is not displayed, the test fails.
+     */
+    fun displayedTopBarFilterJokesIcon() = nodeTopBarFilterJokesIcon.assertIsDisplayed()
 
     /**
      * Asserts the test that the top app bar nav button, is displayed on screen.
@@ -383,32 +513,33 @@ internal open class HomeScreenRobot constructor(
     fun displayedOtherGroupTitle() = nodeOtherGroupTitle.assertIsDisplayed()
 
     /**
-     * Asserts the test that the support me button,
-     * inside navigation drawer, is displayed on screen.
-     * If it is not displayed, the test fails.
-     */
-    fun displayedSupportMeButton() = nodeSupportMeButton.assertIsDisplayed()
-
-    /**
-     * Asserts the test that the icon for the support me button,
-     * inside navigation drawer, is displayed on screen.
-     * If it is not displayed, the test fails.
-     */
-    fun displayedSupportMeIcon() = nodeIconForSupportMeButton.assertIsDisplayed()
-
-    /**
-     * Asserts the test that the icon for the support me button,
-     * inside navigation drawer, is displayed on screen.
-     * If it is not displayed, the test fails.
-     */
-    fun displayedSupportMeText() = nodeTextForSupportMeButton.assertIsDisplayed()
-
-    /**
      * Asserts the test that the laughing face icon inside navigation drawer,
      * is displayed on screen.
      * If it is not displayed, the test fails.
      */
     fun displayedDrawerLaughingIcon() = nodeDrawerLaughingIcon.assertIsDisplayed()
+
+    /**
+     * Asserts the test that the navigation drawer item,
+     * is displayed on screen.
+     * If it is not displayed, the test fails.
+     */
+    fun displayedDrawerItemAboutJokester() = nodeDrawerItemAboutJokester.assertIsDisplayed()
+
+    /**
+     * Asserts the test that the info icon, on About Jokester drawer item,
+     * inside navigation drawer,
+     * is displayed on screen.
+     * If it is not displayed, the test fails.
+     */
+    fun displayedDrawerInfoIcon() = nodeDrawerInfoIcon.assertIsDisplayed()
+
+    /**
+     * Asserts the test that the drawer item "about jokester" text,
+     * is displayed on screen.
+     * If it is not displayed, the test fails.
+     */
+    fun displayedDrawerAboutJokesterText() = nodeDrawerItemAboutJokesterText.assertIsDisplayed()
 
     /**
      * Asserts the test that the drawer title, inside navigation drawer,
@@ -431,6 +562,15 @@ internal open class HomeScreenRobot constructor(
      * If it is not displayed, the test fails.
      */
     fun displayedDrawerItemsDivider() = nodeDrawerItemDivider.assertIsDisplayed()
+
+    /**
+     * Waits until laughing man image on home screen background is seen on screen
+     * and then asserts the test that is displayed.
+     */
+    fun waitUntilLaughingManDisplayed() {
+        waitUntilSeeNodeCd("Laughing man image")
+        nodeLaughingManImage.assertIsDisplayed()
+    }
 
     /**
      * Waits until joke box(background box and text) is seen on screen and then asserts the test that is displayed.
@@ -517,6 +657,103 @@ internal open class HomeScreenRobot constructor(
     fun waitUntilCategoriesErrorTextCorrectWhenNetworkError() {
         waitUntilSeeNodeCd("Joke categories error text, in navigation drawer")
         nodeCategoriesErrorText.assertTextEquals("Check your internet connection.")
+    }
+
+    /**
+     * Waits until filter jokes button,
+     * is displayed on screen
+     * and clicks it.
+     */
+    fun waitUntilFilterJokesButtonIsClicked() {
+        waitUntilSeeNodeCd("Filter jokes button on top bar")
+        nodeTopBarFilterJokesButton.performClick()
+    }
+
+    /**
+     * Waits until filter jokes dialog,
+     * is displayed on screen
+     * and asserts the test that it is displayed.
+     */
+    fun waitUntilFilterJokesDialogIsDisplayed() {
+        waitUntilSeeNodeCd("Filter jokes dialog")
+        nodeFilterJokesDialog.assertIsDisplayed()
+    }
+
+    /**
+     * Waits until filter jokes dialog surface,
+     * is displayed on screen
+     * and asserts the test that it is displayed.
+     */
+    fun waitUntilFilterJokesDialogSurfaceIsDisplayed() {
+        waitUntilSeeNodeCd("Filter jokes dialog surface")
+        nodeFilterJokesDialogSurface.assertIsDisplayed()
+    }
+
+    /**
+     * Waits until a joke flag is displayed on screen,
+     * in filters list,
+     * from joke filter dialog.
+     */
+    fun waitUntilFlagInFiltersListIsDisplayed() {
+        waitUntilSeeNodeCd("Joke flag in filter list")
+        nodeFlagTextInFilterList.assertIsDisplayed()
+    }
+
+    /**
+     * Waits until supporting text on filter jokes dialog,
+     * is displayed on screen.
+     */
+    fun waitUntilSupportingTextIsDisplayed() {
+        waitUntilSeeNodeCd("Filter jokes dialog supporting text")
+        nodeFilterJokesSupportingText.assertIsDisplayed()
+    }
+
+    /**
+     * Wait until unfilter all jokes text button on filter jokes dialog,
+     * is displayed on screen.
+     */
+    fun waitUntilUnfilterJokesButtonIsDisplayed() {
+        waitUntilSeeNodeCd("Unfilter all jokes text button")
+        nodeUnfilterJokesButton.assertIsDisplayed()
+    }
+
+    /**
+     * Wait until text on unfilter all jokes button,
+     * from filter jokes dialog,
+     * is displayed on screen.
+     */
+    fun waitUntilTextOnUnfilterJokesButtonIsDisplayed() {
+        waitUntilSeeNodeText("Unfilter all jokes")
+        nodeTextOnUnfilterJokesButton.assertIsDisplayed()
+    }
+
+    /**
+     * Wait until back text button,
+     * on filter jokes dialog,
+     * is displayed on screen.
+     */
+    fun waitUntilBackButtonIsDisplayed() {
+        waitUntilSeeNodeCd("Back text button")
+        nodeFilterJokesBackButton.assertIsDisplayed()
+    }
+
+    /**
+     * Wait until text on back text button,
+     * from filter jokes dialog,
+     * is displayed on screen.
+     */
+    fun waitUntilTextOnBackButtonIsDisplayed() {
+        waitUntilSeeNodeText("Back")
+        nodeTextOnFilterJokesBackButton.assertIsDisplayed()
+    }
+
+    /**
+     * Waits until title text on filter jokes dialog,
+     * is displayed on screen.
+     */
+    fun waitUntilFilterJokesTitleTextIsDisplayed() {
+        waitUntilSeeNodeCd("Filter jokes title")
+        nodeFilterJokesTitleText.assertIsDisplayed()
     }
 
 }
