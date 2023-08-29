@@ -34,9 +34,9 @@ import org.junit.Test
 /**
  * Unit test, for testing Joke Api.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 class JokeApiTest {
 

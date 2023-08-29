@@ -24,7 +24,7 @@ package com.john_xenakis.jokester.data.models
 /**
  * The joke category content data class regarding on what the joke category item should contain.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
  * @version 1.0.0-beta
  */

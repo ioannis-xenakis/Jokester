@@ -3,6 +3,7 @@ package com.john_xenakis.jokester.screens.home
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.navigation.compose.rememberNavController
 import com.john_xenakis.jokester.MainActivity
 import com.john_xenakis.jokester.data.remote.JokeApi
 import com.john_xenakis.jokester.di.AppModule
@@ -59,9 +60,9 @@ import javax.inject.Inject
 /**
  * Ui test with Jetpack compose, for testing Home Screen.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
@@ -127,7 +128,8 @@ class HomeScreenTest {
     private fun launchHomeScreen() {
         composeTestRule.activity.setContent {
             JokesterTheme {
-                HomeScreen()
+                val navController = rememberNavController()
+                HomeScreen(navController = navController)
             }
         }
     }

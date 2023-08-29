@@ -29,9 +29,9 @@ import com.squareup.moshi.JsonClass
  * when the api cannot return the joke and returns an error response,
  * directly from the joke api.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 @JsonClass(generateAdapter = true)
 data class ErrorResponse(

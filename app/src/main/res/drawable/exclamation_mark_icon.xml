@@ -1,9 +1,4 @@
-package com.john_xenakis.jokester.data.remote.responses
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-/*
+<!--
     Jokester is the app for reading jokes and make people laugh.
     Copyright (C) 2022  Ioannis Xenakis
 
@@ -22,28 +17,7 @@ import com.squareup.moshi.JsonClass
 
     Anything you want to contact me for, contact me with an e-mail, at: xenakis.i.contact@gmail.com
     I'll be happy to help you, or discuss anything with you!
- */
-
-/**
- * The api response data class,
- * for returning all aliases for each joke category,
- * directly from the joke api.
- *
- * @since 28/9(Sept)/2023
- * @author Ioannis Xenakis
- * @version 1.0.0-beta
- */
-@JsonClass(generateAdapter = true)
-data class CategoryAliases(
-    /**
-     * The alias that can be used instead of the default category name.
-     */
-    @Json
-    val alias: String,
-
-    /**
-     * The default category name that is used by default and is equal/resolved to the corresponding alias.
-     */
-    @Json
-    val resolved: String
-)
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:pathData="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm-1.5-3.5c0 0.828 0.672 1.5 1.5 1.5s1.5-0.672 1.5-1.5V18c0-0.828-0.672-1.5-1.5-1.5s-1.5 0.672-1.5 1.5v0.5zm0-5.5c0 0.828 0.672 1.5 1.5 1.5s1.5-0.672 1.5-1.5V6c0-0.828-0.672-1.5-1.5-1.5S10.5 5.172 10.5 6v7z" android:fillColor="#1D192B" android:fillType="evenOdd"/>
+</vector>

@@ -29,7 +29,7 @@ import timber.log.Timber
 /**
  * Unit test, for testing the ViewModel for home screen.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
  * @version 1.0.0-beta
  */

@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -60,7 +61,10 @@ import timber.log.Timber
  * @param homeViewModel The ViewModel for the home screen.
  */
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    navController: NavController,
+    homeViewModel: HomeViewModel = hiltViewModel()
+) {
     val selectedCategory = remember { mutableStateOf(JokeCategoryContent("Any")) }
 
     val checkedFlagList = remember { homeViewModel.checkedFlagList }
@@ -100,7 +104,8 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
             homeViewModel.removeFromCheckedFlagsList(jokeFlagsContent)
         },
         selectedCategory = selectedCategory,
-        openDialog = remember { mutableStateOf( false ) }
+        openDialog = remember { mutableStateOf( false ) },
+        navToAboutScreen = { navController.navigate("about_screen") }
     )
 }
 
@@ -146,7 +151,8 @@ fun HomeUI(
     addToCheckedFlagsList: (JokeFlagsContent) -> Unit = {},
     removeFromCheckedFlagsList: (JokeFlagsContent) -> Unit = {},
     selectedCategory: MutableState<JokeCategoryContent>,
-    openDialog: MutableState<Boolean>
+    openDialog: MutableState<Boolean>,
+    navToAboutScreen: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -157,6 +163,7 @@ fun HomeUI(
         loadJokeList = { loadJokeList() },
         clearJokeList = { clearJokeList() },
         loadJokeCategories = { loadJokeCategories() },
+        navToAboutScreen = { navToAboutScreen() },
         drawerState = drawerState,
         scope = scope,
         selectedCategory = selectedCategory
@@ -566,6 +573,7 @@ fun NavigationDrawer(
     loadJokeList: () -> Unit,
     clearJokeList: () -> Unit,
     loadJokeCategories: () -> Unit,
+    navToAboutScreen: () -> Unit = {},
     scope: CoroutineScope,
     selectedCategory: MutableState<JokeCategoryContent> = mutableStateOf(
         JokeCategoryContent("Any")
@@ -697,7 +705,10 @@ fun NavigationDrawer(
                     DrawerItem(
                         itemText = "About Jokester",
                         selectedBoolean = false,
-                        onClick = { /*TODO Add onClick functionality*/ },
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            navToAboutScreen()
+                        },
                         itemDescription = "Drawer item About Jokester",
                         iconId = R.drawable.info_icon,
                         iconDescription = "Drawer item icon About Jokester"
@@ -864,10 +875,10 @@ fun FilterJokesDialog(
                             ) {
                                 Checkbox(
                                     checked = checkedFlagsState[jokeFlagsContent.jokeFlagId]!!.value,
-                                    onCheckedChange = { checked_ ->
+                                    onCheckedChange = { checked ->
                                         checkedFlagsState[jokeFlagsContent.jokeFlagId]!!.value =
-                                            checked_
-                                        if (checked_ == true) {
+                                            checked
+                                        if (checked == true) {
                                             addToCheckedFlagsList(jokeFlagsContent)
                                         } else {
                                             removeFromCheckedFlagsList(jokeFlagsContent)
@@ -892,10 +903,10 @@ fun FilterJokesDialog(
                         ) {
                             Checkbox(
                                 checked = checkedSafeFlagState.value,
-                                onCheckedChange = { checked_ ->
-                                    checkedSafeFlagState.value = checked_
+                                onCheckedChange = { checked ->
+                                    checkedSafeFlagState.value = checked
 
-                                    if (checked_ == true) {
+                                    if (checked == true) {
                                         safeMode.value = "safe-mode"
                                         enabledFlagCheckbox.value = false
                                     } else {

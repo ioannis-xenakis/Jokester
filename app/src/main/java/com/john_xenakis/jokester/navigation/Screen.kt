@@ -25,17 +25,23 @@ package com.john_xenakis.jokester.navigation
  * All the screens are here.
  * No coding logic. Just the screens.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 sealed class Screen(val route: String) {
     /**
      * The splash screen(as an object).
      */
     object Splash : Screen("splash_screen")
+
     /**
      * The home screen(as an object).
      */
     object Home : Screen("home_screen")
+
+    /**
+     * The about screen(as an object).
+     */
+    object About : Screen("about_screen")
 }

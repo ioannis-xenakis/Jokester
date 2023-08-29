@@ -1,8 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -12,8 +13,8 @@ android {
         applicationId "com.john_xenakis.jokester"
         minSdk 21
         targetSdk 33
-        versionCode 3
-        versionName "1.0.0-alpha3"
+        versionCode 4
+        versionName "1.0.0-beta"
 
         testInstrumentationRunner "com.john_xenakis.jokester.CustomTestRunner"
     }
@@ -25,6 +26,7 @@ android {
     buildTypes {
         debug {
             buildConfigField("Integer", "PORT", "8080")
+            buildConfigField("String", "APP_VERSION_DATE", '"15/9/2023"')
         }
         release {
             // Enables code shrinking, obfuscation, and optimization for only
@@ -113,7 +115,7 @@ dependencies {
     def moshiVersion = '1.15.0'
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     implementation("com.squareup.moshi:moshi:$moshiVersion")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'io.mockk:mockk:1.13.5'
@@ -126,8 +128,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     debugImplementation 'androidx.compose.ui:ui-test-manifest:1.5.0-alpha04'
-}
-
-kapt {
-    correctErrorTypes true
 }

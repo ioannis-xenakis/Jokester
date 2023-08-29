@@ -52,7 +52,7 @@ interface JokeRepository {
      * @param safeMode THe mode for showing only safe jokes and appropriate for anyone.
      * @return The joke list with its resource class.
      */
-    suspend fun getJokeList(jokeCategory: String, flags: String?, safeMode: String?): Resource<JokeList>
+    suspend fun getJokeList(jokeCategory: String, flags: String?, safeMode: String? = null): Resource<JokeList>
 
     /**
      * Gets all of the joke categories.

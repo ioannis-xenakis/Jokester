@@ -31,9 +31,9 @@ import okhttp3.mockwebserver.SocketPolicy
  * for emulating a disconnected internet,
  * thus returning an empty mocked response.
  *
- * @since 10/4(Apr)/2022
+ * @since 28/9(Sept)/2023
  * @author Ioannis Xenakis
- * @version 1.0.0-alpha
+ * @version 1.0.0-beta
  */
 class DisconnectDispatcher(): Dispatcher() {
     override fun dispatch(request: RecordedRequest): MockResponse {

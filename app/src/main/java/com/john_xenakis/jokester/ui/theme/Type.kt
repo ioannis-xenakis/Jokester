@@ -63,5 +63,10 @@ val FredokaOneTypography = Typography(
     labelLarge = TextStyle(
         fontFamily = FredokaOne,
         fontSize = 14.sp
+    ),
+
+    labelSmall = TextStyle(
+        fontFamily = FredokaOne,
+        fontSize = 10.sp
     )
 )
