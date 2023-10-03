@@ -491,6 +491,9 @@ fun WhatsNewMainInfo() {
                 text = "NEW:\n" +
                         "• About Screen.\n" +
                         "    • Whats new button with dialog. \n" +
+                        "    • Rate Jokester button. \n" +
+                        "    • Source code button. \n" +
+                        "    • Contact developer button. \n" +
                         "• Filter jokes with tags, from home screen.\n" +
                         "    • Safe jokes tag. \n" +
                         "    • Other tags. \n" +
