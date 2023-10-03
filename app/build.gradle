@@ -29,6 +29,8 @@ android {
             buildConfigField("String", "APP_VERSION_DATE", '"15/9/2023"')
         }
         release {
+            buildConfigField("String", "APP_VERSION_DATE", '"15/9/2023"')
+
             // Enables code shrinking, obfuscation, and optimization for only
             // your project's release build type.
             minifyEnabled true
