@@ -1,5 +1,6 @@
 package com.john_xenakis.jokester.screens.about
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import john_xenakis.jokester.BuildConfig
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /*
     Jokester is the app for reading jokes and make people laugh.
@@ -45,15 +47,27 @@ class AboutViewModel : ViewModel() {
      */
     fun goToStorePage(context: Context) {
         viewModelScope.launch {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(
-                    "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-                )
+            try {
+                Timber.d("Opening google play store app.")
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+                    )
 
-                setPackage("com.android.vending")
+                    setPackage("com.android.vending")
+                }
+
+                context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Timber.d("Google play store app not found. Opening with a web browser.")
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+                    )
+                }
+
+                context.startActivity(intent)
             }
-
-            context.startActivity(intent)
         }
     }
 
