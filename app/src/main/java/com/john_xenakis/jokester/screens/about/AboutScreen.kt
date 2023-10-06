@@ -94,7 +94,8 @@ fun AboutScreen(
             mailToDeveloper = { aboutViewModel.mailToDeveloper(context) }
         ),
         appVersion = BuildConfig.VERSION_NAME,
-        isSnackbarShowing = aboutViewModel.isSnackbarShowing
+        isSnackbarShowing = aboutViewModel.isSnackbarShowing,
+        snackbarText = aboutViewModel.snackbarText.value
     )
 }
 
@@ -105,13 +106,15 @@ fun AboutScreen(
  * if the "whats new" dialog will be open or closed.
  * @param aboutUIEvents The events(for ex. onClick events).
  * @param isSnackbarShowing The boolean, deciding if the snackbar should be shown or not.
+ * @param snackbarText The text on snackbar.
  */
 @Composable
 fun AboutUI(
     appVersion: String = "",
     openWhatsNewDialog: MutableState<Boolean> = mutableStateOf(false),
     aboutUIEvents: Events = Events(),
-    isSnackbarShowing: MutableState<Boolean> = mutableStateOf(false)
+    isSnackbarShowing: MutableState<Boolean> = mutableStateOf(false),
+    snackbarText: String = ""
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -135,7 +138,8 @@ fun AboutUI(
         Snackbar(
             scope = scope,
             isSnackbarShowing = isSnackbarShowing,
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
+            snackbarText = snackbarText
         )
     }
 }
@@ -178,22 +182,21 @@ fun TopBarAboutScreen(topBarEvents: Events = Events()) {
  * @param scope The coroutine scope.
  * @param isSnackbarShowing The boolean deciding if the snackbar should open or not.
  * @param snackbarHostState The snackbar and its state, controlling what snackbar should do.
+ * @param snackbarText The text on snackbar.
  */
 @Composable
 fun Snackbar(
     scope: CoroutineScope = rememberCoroutineScope(),
     isSnackbarShowing: MutableState<Boolean> = mutableStateOf(true),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    snackbarText: String = ""
 ) {
     Timber.d("isSnackbarShowing boolean: " + isSnackbarShowing.value)
 
     if (isSnackbarShowing.value) {
         LaunchedEffect(isSnackbarShowing) {
             scope.launch {
-                snackbarHostState.showSnackbar(
-                    "Didn't find an app to open Github." +
-                            " Please install an app to use."
-                )
+                snackbarHostState.showSnackbar(snackbarText)
 
                 isSnackbarShowing.value = false
             }

@@ -49,6 +49,11 @@ class AboutViewModel : ViewModel() {
     var isSnackbarShowing = mutableStateOf(false)
 
     /**
+     * The text shown on snackbar.
+     */
+    var snackbarText = mutableStateOf("")
+
+    /**
      * Directs user at the google play store page of this app.
      * @param context The context of the page/activity.
      */
@@ -66,14 +71,24 @@ class AboutViewModel : ViewModel() {
 
                 context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                Timber.d("Google play store app not found. Opening with a web browser.")
-                val intent = Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse(
-                        "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-                    )
-                }
+                try {
+                    Timber.d("Google play store app not found. Opening with a web browser.")
 
-                context.startActivity(intent)
+                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                        data = Uri.parse(
+                            "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+                        )
+                    }
+
+                    context.startActivity(intent)
+                } catch (ex: ActivityNotFoundException) {
+                    Timber.d("Didn't find an app to open Google Play Store.")
+
+                    snackbarText.value = "Didn't find an app to open Google Play Store." +
+                            " Please install a web browser/app to use."
+
+                    isSnackbarShowing.value = true
+                }
             }
         }
     }
@@ -97,6 +112,8 @@ class AboutViewModel : ViewModel() {
             } catch (e: ActivityNotFoundException) {
                 Timber.d("Didn't find web browser.")
 
+                snackbarText.value = "Didn't find an app to open Github. " +
+                        "Please install an web browser/app to use."
                 isSnackbarShowing.value = true
             }
         }
