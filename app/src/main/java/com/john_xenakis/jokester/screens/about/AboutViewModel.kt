@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import john_xenakis.jokester.BuildConfig
@@ -41,6 +42,12 @@ import timber.log.Timber
  * @version 1.0.0-beta
  */
 class AboutViewModel : ViewModel() {
+
+    /**
+     * The boolean deciding if snackbar should be opened or not.
+     */
+    var isSnackbarShowing = mutableStateOf(false)
+
     /**
      * Directs user at the google play store page of this app.
      * @param context The context of the page/activity.
@@ -77,13 +84,21 @@ class AboutViewModel : ViewModel() {
      */
     fun goToGithubRepoPage(context: Context) {
         viewModelScope.launch {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(
-                    "https://github.com/ioannis-xenakis/Jokester/tree/Develop"
-                )
-            }
+            try {
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "https://github.com/ioannis-xenakis/Jokester/tree/Develop"
+                    )
+                }
 
-            context.startActivity(intent)
+                context.startActivity(intent)
+
+                Timber.d("Found a web browser.")
+            } catch (e: ActivityNotFoundException) {
+                Timber.d("Didn't find web browser.")
+
+                isSnackbarShowing.value = true
+            }
         }
     }
 
