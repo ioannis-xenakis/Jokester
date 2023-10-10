@@ -23,15 +23,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +49,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import john_xenakis.jokester.BuildConfig
 import john_xenakis.jokester.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /*
     Jokester is the app for reading jokes and make people laugh.
@@ -86,7 +93,9 @@ fun AboutScreen(
             goToGithubRepoPage = { aboutViewModel.goToGithubRepoPage(context) },
             mailToDeveloper = { aboutViewModel.mailToDeveloper(context) }
         ),
-        appVersion = BuildConfig.VERSION_NAME
+        appVersion = BuildConfig.VERSION_NAME,
+        isSnackbarShowing = aboutViewModel.isSnackbarShowing,
+        snackbarText = aboutViewModel.snackbarText.value
     )
 }
 
@@ -96,17 +105,25 @@ fun AboutScreen(
  * @param openWhatsNewDialog The boolean for choosing
  * if the "whats new" dialog will be open or closed.
  * @param aboutUIEvents The events(for ex. onClick events).
+ * @param isSnackbarShowing The boolean, deciding if the snackbar should be shown or not.
+ * @param snackbarText The text on snackbar.
  */
 @Composable
 fun AboutUI(
     appVersion: String = "",
     openWhatsNewDialog: MutableState<Boolean> = mutableStateOf(false),
-    aboutUIEvents: Events = Events()
+    aboutUIEvents: Events = Events(),
+    isSnackbarShowing: MutableState<Boolean> = mutableStateOf(false),
+    snackbarText: String = ""
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             TopBarAboutScreen(aboutUIEvents)
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { padding ->
 
         MainContentAboutScreen(
@@ -117,6 +134,13 @@ fun AboutUI(
         )
 
         WhatsNewDialog(openWhatsNewDialog, padding)
+
+        Snackbar(
+            scope = scope,
+            isSnackbarShowing = isSnackbarShowing,
+            snackbarHostState = snackbarHostState,
+            snackbarText = snackbarText
+        )
     }
 }
 
@@ -151,6 +175,33 @@ fun TopBarAboutScreen(topBarEvents: Events = Events()) {
             containerColor = MaterialTheme.colorScheme.background
         )
     )
+}
+
+/**
+ * The snackbar of "about" screen.
+ * @param scope The coroutine scope.
+ * @param isSnackbarShowing The boolean deciding if the snackbar should open or not.
+ * @param snackbarHostState The snackbar and its state, controlling what snackbar should do.
+ * @param snackbarText The text on snackbar.
+ */
+@Composable
+fun Snackbar(
+    scope: CoroutineScope = rememberCoroutineScope(),
+    isSnackbarShowing: MutableState<Boolean> = mutableStateOf(true),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    snackbarText: String = ""
+) {
+    Timber.d("isSnackbarShowing boolean: " + isSnackbarShowing.value)
+
+    if (isSnackbarShowing.value) {
+        LaunchedEffect(isSnackbarShowing) {
+            scope.launch {
+                snackbarHostState.showSnackbar(snackbarText)
+
+                isSnackbarShowing.value = false
+            }
+        }
+    }
 }
 
 /**

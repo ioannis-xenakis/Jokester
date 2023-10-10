@@ -1,12 +1,15 @@
 package com.john_xenakis.jokester.screens.about
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import john_xenakis.jokester.BuildConfig
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /*
     Jokester is the app for reading jokes and make people laugh.
@@ -39,21 +42,54 @@ import kotlinx.coroutines.launch
  * @version 1.0.0-beta
  */
 class AboutViewModel : ViewModel() {
+
+    /**
+     * The boolean deciding if snackbar should be opened or not.
+     */
+    var isSnackbarShowing = mutableStateOf(false)
+
+    /**
+     * The text shown on snackbar.
+     */
+    var snackbarText = mutableStateOf("")
+
     /**
      * Directs user at the google play store page of this app.
      * @param context The context of the page/activity.
      */
     fun goToStorePage(context: Context) {
         viewModelScope.launch {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(
-                    "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-                )
+            try {
+                Timber.d("Opening google play store app.")
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+                    )
 
-                setPackage("com.android.vending")
+                    setPackage("com.android.vending")
+                }
+
+                context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                try {
+                    Timber.d("Google play store app not found. Opening with a web browser.")
+
+                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                        data = Uri.parse(
+                            "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+                        )
+                    }
+
+                    context.startActivity(intent)
+                } catch (ex: ActivityNotFoundException) {
+                    Timber.d("Didn't find an app to open Google Play Store.")
+
+                    snackbarText.value = "Didn't find an app to open Google Play Store." +
+                            " Please install a web browser/app to use."
+
+                    isSnackbarShowing.value = true
+                }
             }
-
-            context.startActivity(intent)
         }
     }
 
@@ -63,13 +99,23 @@ class AboutViewModel : ViewModel() {
      */
     fun goToGithubRepoPage(context: Context) {
         viewModelScope.launch {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(
-                    "https://github.com/ioannis-xenakis/Jokester/tree/Develop"
-                )
-            }
+            try {
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "https://github.com/ioannis-xenakis/Jokester/tree/Develop"
+                    )
+                }
 
-            context.startActivity(intent)
+                context.startActivity(intent)
+
+                Timber.d("Found a web browser.")
+            } catch (e: ActivityNotFoundException) {
+                Timber.d("Didn't find web browser.")
+
+                snackbarText.value = "Didn't find an app to open Github. " +
+                        "Please install an web browser/app to use."
+                isSnackbarShowing.value = true
+            }
         }
     }
 

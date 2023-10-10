@@ -10,15 +10,16 @@ The app that can make us laugh with its jokes! The android app that shows both d
 </div>
 
 ## Latest release
-Version 1.0.0 Alpha is out! [Download it from here](https://github.com/ioannis-xenakis/Jokester/releases/download/v1.0.0-alpha/jokester-v1.0.0-alpha.apk) and run/open it from your android device.
+Version 1.0.0 Beta is ready! [Download it](https://github.com/ioannis-xenakis/Jokester/releases/download/v1.0.0-beta/jokester-v1.0.0-beta.apk) and run/open it from your android device.
 
 ## Tools/ide used for app development
 Built with Android Studio. [Use the stable version](https://developer.android.com/studio) to build with me.
 
 ## Become a tester
-Jokester is looking for alpha testers! If you like to be the first to get new features that aint ready yet, come on and join on Google Play store as an alpha tester! You can also email me new feature ideas on my email at Xenakis.i.contact@gmail.com . Be sure I'll take feature ideas into consideration, if not add them. I would love and appreciate it if you become an alpha tester!  
-#### How to become an alpha tester
-You can become an alpha tester by emailing me your email adress which is connected with your Google Play store account, then I'll add you with your email address you sent me, to the testers list and email you the invitation link to the email address you sent me.    
+Jokester is looking for app testers! If you like to be the first to get new features that aint ready yet, come on and join on Google Play store as an alpha tester! You can be beta tester too, if you want. You can also email me new feature ideas on my email at Xenakis.i.contact@gmail.com . Be sure I'll take feature ideas into consideration, if not add them. I would love and appreciate it if you become an alpha/beta tester!  
+#### How to become an alpha tester on Google Play Store/Github
+You can become an alpha tester by emailing me your email adress which is connected with your Google Play store account, then I'll add you with your email address you sent me, to the testers list and email you the invitation link to the email address you sent me.
+Or if you dont want to install Jokester through Google Play Store, and install it from Github, just [head to releases](https://github.com/ioannis-xenakis/Jokester/releases) and  download the latest beta/alpha release.
 
 ## Contribute
 I would appreciate it a lot to help me build this app and make it better for the people to see and use it.
