@@ -6,7 +6,9 @@ The app that can make us laugh with its jokes! The android app that shows both d
 
 ## Screenshots
 <div style="display:flex;">
-<img src="screenshots/1.png" width="19%" />
+  <img src="screenshots/1.png" width="193" />
+  <img src="screenshots/2.png" width="193" />
+  <img src="screenshots/3.png" width="193" />
 </div>
 
 ## Latest release
