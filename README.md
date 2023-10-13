@@ -12,7 +12,7 @@ The app that can make us laugh with its jokes! The android app that shows both d
 </div>
 
 ## Latest release
-Version 1.0.0 Beta is ready! [Download it](https://github.com/ioannis-xenakis/Jokester/releases/download/v1.0.0-beta2/jokester-v1.0.0-beta2.apk) and run/open it from your android device.
+Version 1.0.0 Beta 2 is ready! [Download it](https://github.com/ioannis-xenakis/Jokester/releases/download/v1.0.0-beta2/jokester-v1.0.0-beta2.apk) and run/open it from your android device.
 
 ## Tools/ide used for app development
 Built with Android Studio. [Use the stable version](https://developer.android.com/studio) to build with me.
