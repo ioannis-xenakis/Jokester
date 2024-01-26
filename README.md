@@ -1,4 +1,4 @@
-# <img src="https://user-images.githubusercontent.com/37518738/205691731-a3781c13-075f-49a3-a768-010e52aeed76.png" width="9%"/> Jokester
+# <img src="https://user-images.githubusercontent.com/37518738/205691731-a3781c13-075f-49a3-a768-010e52aeed76.png" width="9%"/> Jokester LOL!
 
 The app that can make us laugh with its jokes! The android app that shows both dark-ish and more appropriate jokes to everyone. The app that shows jokes, for most tastes!
 
