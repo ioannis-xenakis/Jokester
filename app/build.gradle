@@ -7,12 +7,12 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.john_xenakis.jokester"
         minSdk 21
-        targetSdk 33
+        targetSdk 35
         versionCode 4
         versionName "1.0.0-beta"
 
