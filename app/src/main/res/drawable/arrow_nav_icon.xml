@@ -1,0 +1,29 @@
+<!--
+    Jokester is the app for reading jokes and make people laugh.
+    Copyright (C) 2022  Ioannis Xenakis
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+    Anything you want to contact me for, contact me with an e-mail, at: xenakis.i.contact@gmail.com
+    I'll be happy to help you, or discuss anything with you!
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+  <path
+      android:pathData="M16,8C16,7.448 15.552,7 15,7H6.244C5.353,7 4.907,5.923 5.537,5.293L8.71,2.12C9.102,1.728 9.1,1.093 8.707,0.703C8.317,0.314 7.685,0.315 7.295,0.705L0.707,7.293C0.317,7.683 0.317,8.317 0.707,8.707L7.295,15.295C7.684,15.684 8.316,15.684 8.705,15.295C9.095,14.905 9.095,14.274 8.706,13.885L5.533,10.707C4.904,10.076 5.351,9 6.241,9H15C15.552,9 16,8.552 16,8Z"
+      android:fillColor="#1C1B1F"/>
+</vector>
