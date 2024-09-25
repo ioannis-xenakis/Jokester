@@ -15,7 +15,7 @@ The app that can make us laugh with its jokes! The android app that shows both d
 To install, [download the .apk file](https://github.com/ioannis-xenakis/Jokester/releases/latest) and run it from your android device.
 
 ## Tools/ide used for app development
-Built with Android Studio. [Use the stable version](https://developer.android.com/studio) to build with me.
+Built with Android Studio.
 
 ## Become a tester
 Jokester is looking for app testers! If you like to be the first to get new features that aint ready yet, come on and join on Google Play store as an alpha tester! You can be beta tester too, if you want. You can also email me new feature ideas on my email at Xenakis.i.contact@gmail.com . Be sure I'll take feature ideas into consideration, if not add them. I would love and appreciate it if you become an alpha/beta tester!  
