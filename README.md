@@ -2,7 +2,7 @@
 
 The app that can make us laugh with its jokes! The android app that shows both dark-ish and more appropriate jokes to everyone. The app that shows jokes, for most tastes!
 
-**WARNING**: Some of the jokes that the app shows, may be offensive for some people. No offense intended. Don't say I didn't warn you. The jokes are there to make us laugh, not offend people. When the 1.0.0-beta releases, it will have an option to show only non-offensive and appropriate jokes for everyone.
+**WARNING**: Some of the jokes that the app shows, may be offensive for some people. No offense intended. Don't say I didn't warn you. The jokes are there to make us laugh, not offend people.
 
 ## Screenshots
 <div style="display:flex;">
